@@ -485,6 +485,64 @@ body {
 }
 
 @keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+    }
+}
+
+.card-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--secondary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card-date {
+    color: var(--text-muted);
+    margin-top: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.card-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.info-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
     margin-top: 20px;
 }
 
@@ -710,480 +768,89 @@ body {
         text-align: center;
     }
 
-    .delete-btn {
-        background: rgba(239, 68, 68, 0.2);
-        color: #ef4444;
-        border: 1px solid rgba(239, 68, 68, 0.3);
+    .header-left {
+        flex-direction: column;
     }
 
-    .delete-btn:hover {
-        background: rgba(239, 68, 68, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    .auth-card {
+        padding: 40px 30px;
     }
+}
 
-    /* ===== MODAL ===== */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-        animation: fadeIn 0.3s;
-    }
-
-    .modal.active {
-        display: flex;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    .modal-content {
-        background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-        animation: slideUp 0.3s;
-        transform-style: preserve-3d;
-    }
-
-    @keyframes slideUp {
-        from {
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .modal-header {
-        padding: 25px 30px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal-header h3 {
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .close-btn {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .close-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-        transform: rotate(90deg);
-    }
-
-    .modal-body {
-        padding: 30px;
-    }
-
-    .modal-footer {
-        padding: 20px 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        gap: 15px;
-        justify-content: flex-end;
-    }
-
-    .secondary-btn {
-        padding: 12px 24px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        color: var(--text-light);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .secondary-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--text-muted);
-    }
-
-    .empty-state i {
-        font-size: 80px;
-        margin-bottom: 20px;
-        opacity: 0.3;
-    }
-
-    .empty-state p {
-        font-size: 1.2rem;
-    }
-
-    /* ===== TOAST ===== */
-    .toast {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        padding: 16px 24px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: var(--shadow-3d);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transform: translateX(400px);
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 2000;
-    }
-
-    .toast.show {
-        transform: translateX(0);
-    }
-
-    .toast.success {
-        border-color: #22c55e;
-        color: #22c55e;
-    }
-
-    .toast.error {
-        border-color: #ef4444;
-        color: #ef4444;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .birthdays-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .header-content {
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-        }
-
-        .header-left {
-            flex-direction: column;
-        }
-
-        .auth-card {
-            padding: 40px 30px;
-        }
-    }
-
-    /* -------------------------------------------------
+/* -------------------------------------------------
    Layout per data + pulsante (desktop)
    ------------------------------------------------- */
-    .date-button-group {
-        display: flex;
-        align-items: flex-end;
-        gap: 12px;
-        margin-top: 20px;
-    }
+.date-button-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
 
-    .date-button-group .input-group {
-        flex: 1;
-        margin-bottom: 0;
-        /* Override default margin */
+.date-button-group .input-group {
+    flex: 1;
+    margin-bottom: 0;
+    /* Override default margin */
+}
+
+.date-button-group .primary-btn {
+    white-space: nowrap;
+    height: 54px;
+    /* Match input height roughly */
+}
+
+/* -------------------------------------------------
+   Mobile: metti data e pulsante in colonna con spazio
+   ------------------------------------------------- */
+@media (max-width: 600px) {
+    .date-button-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        /* Increased gap */
     }
 
     .date-button-group .primary-btn {
+        width: 100%;
+        margin-top: 5px;
+        /* Extra space */
+    }
 
-        .modal.active {
-            display: flex;
-        }
+    .date-button-group .input-group {
+        margin-bottom: 0;
+        width: 100%;
+        /* Ensure full width */
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
+    .date-button-group .input-group input {
+        width: 100%;
+        /* Ensure input takes full width */
+    }
+}
 
-            to {
-                opacity: 1;
-            }
-        }
+/* Delete All Button Style */
+.delete-all-container {
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
 
-        .modal-content {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.3s;
-            transform-style: preserve-3d;
-        }
+.delete-all-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            padding: 25px 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 30px;
-        }
-
-        .modal-footer {
-            padding: 20px 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-        }
-
-        .secondary-btn {
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .secondary-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-state i {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .empty-state p {
-            font-size: 1.2rem;
-        }
-
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            padding: 16px 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--shadow-3d);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2000;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            border-color: #22c55e;
-            color: #22c55e;
-        }
-
-        .toast.error {
-            border-color: #ef4444;
-            color: #ef4444;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .birthdays-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-
-            .header-left {
-                flex-direction: column;
-            }
-
-            .auth-card {
-                padding: 40px 30px;
-            }
-        }
-
-        /* -------------------------------------------------
-   Layout per data + pulsante (desktop)
-   ------------------------------------------------- */
-        .date-button-group {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .date-button-group .input-group {
-            flex: 1;
-            margin-bottom: 0;
-            /* Override default margin */
-        }
-
-        .date-button-group .primary-btn {
-            white-space: nowrap;
-            height: 54px;
-            /* Match input height roughly */
-        }
-
-        /* -------------------------------------------------
-   Mobile: metti data e pulsante in colonna con spazio
-   ------------------------------------------------- */
-        @media (max-width: 600px) {
-            .date-button-group {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-                /* Increased gap */
-            }
-
-            .date-button-group .primary-btn {
-                width: 100%;
-                margin-top: 5px;
-                /* Extra space */
-            }
-
-            .date-button-group .input-group {
-                margin-bottom: 0;
-                width: 100%;
-                /* Ensure full width */
-            }
-
-            .date-button-group .input-group input {
-                width: 100%;
-                /* Ensure input takes full width */
-            }
-        }
-
-        /* Delete All Button Style */
-        .delete-all-container {
-            margin-top: 30px;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
-        }
-
-        .delete-all-btn {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .delete-all-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
-            transform: translateY(-2px);
-        }
+.delete-all-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: translateY(-2px);
+}
