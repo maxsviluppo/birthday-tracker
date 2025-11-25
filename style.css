@@ -500,22 +500,6 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     background: var(--secondary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.card-date {
-    color: var(--text-muted);
-    margin-top: 5px;
-    margin-bottom: 20px;
-    display: flex;
-    color: var(--text-light);
-}
-
-.card-actions {
-    display: flex;
-    gap: 10px;
     margin-top: 20px;
 }
 
