@@ -119,6 +119,7 @@ function initializeAppListeners() {
     addBtn.addEventListener('click', async () => {
         const name = document.getElementById('personName').value.trim();
         const date = document.getElementById('birthDate').value;
+        const photoUrl = document.getElementById('photoUrl').value.trim();
 
         if (!name || !date) {
             showToast('Inserisci nome e data di nascita!', 'error');
@@ -141,7 +142,8 @@ function initializeAppListeners() {
             .insert([{
                 user_id: currentUser.id,
                 person_name: name,
-                birth_date: date
+                birth_date: date,
+                photo_url: photoUrl || null
             }]);
 
         if (error) {
@@ -150,6 +152,7 @@ function initializeAppListeners() {
             showToast('Compleanno aggiunto!', 'success');
             document.getElementById('personName').value = '';
             document.getElementById('birthDate').value = '';
+            document.getElementById('photoUrl').value = '';
             loadBirthdays();
         }
 
@@ -176,6 +179,7 @@ function initializeAppListeners() {
     saveEdit.addEventListener('click', async () => {
         const name = document.getElementById('editPersonName').value.trim();
         const date = document.getElementById('editBirthDate').value;
+        const photoUrl = document.getElementById('editPhotoUrl').value.trim();
 
         if (!name || !date) {
             showToast('Inserisci nome e data!', 'error');
@@ -189,7 +193,8 @@ function initializeAppListeners() {
             .from('birthdays')
             .update({
                 person_name: name,
-                birth_date: date
+                birth_date: date,
+                photo_url: photoUrl || null
             })
             .eq('id', currentEditId);
 
@@ -245,6 +250,7 @@ async function loadBirthdays() {
 }
 
 function sortByUpcoming(birthdays) {
+    const today = new Date();
     return birthdays.sort((a, b) => {
         const daysA = getDaysUntilBirthday(a.birth_date);
         const daysB = getDaysUntilBirthday(b.birth_date);
@@ -269,22 +275,10 @@ function createBirthdayCard(birthday) {
     }
 
     const formattedDate = birthDate.toLocaleDateString('it-IT', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
-
-    card.innerHTML = `
-        <div class="card-name">${escapeHtml(birthday.person_name)}</div>
-        <div class="card-date">
-            <i class="fas fa-calendar"></i>
-            ${formattedDate}
-        </div>
-        <div class="card-info">
-            <div class="info-box">
+            < div class= "info-box" >
                 <div class="info-label">Età Attuale</div>
                 <div class="info-value">${currentAge}</div>
-            </div>
+            </div >
             <div class="info-box">
                 <div class="info-label">Prossima Età</div>
                 <div class="info-value">${nextAge}</div>
@@ -299,13 +293,13 @@ function createBirthdayCard(birthday) {
                     ${daysUntil === 0 ? '🎉 Oggi!' : daysUntil === 1 ? '⏰ Domani' : '📅 Prossimo'}
                 </div>
             </div>
-        </div>
+        </div >
         <div class="card-actions">
-            <button class="action-btn edit-btn">
+            <button class="action-btn edit-btn" data-id="${birthday.id}">
                 <i class="fas fa-edit"></i>
                 Modifica
             </button>
-            <button class="action-btn delete-btn">
+            <button class="action-btn delete-btn" data-id="${birthday.id}">
                 <i class="fas fa-trash"></i>
                 Elimina
             </button>
@@ -318,13 +312,14 @@ function createBirthdayCard(birthday) {
         currentEditId = birthday.id;
         document.getElementById('editPersonName').value = birthday.person_name;
         document.getElementById('editBirthDate').value = birthday.birth_date;
+        document.getElementById('editPhotoUrl').value = birthday.photo_url || '';
         document.getElementById('editModal').classList.add('active');
     });
 
     // Delete button
     const deleteBtn = card.querySelector('.delete-btn');
     deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
+        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${ birthday.person_name }?`)) {
             const { error } = await supabase
                 .from('birthdays')
                 .delete()
@@ -398,11 +393,11 @@ function showToast(message, type) {
     if (existingToast) existingToast.remove();
 
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+    toast.className = `toast ${ type } `;
 
     const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
 
-    toast.innerHTML = `${icon} <span>${message}</span>`;
+    toast.innerHTML = `${ icon } <span>${message}</span>`;
     document.body.appendChild(toast);
 
     setTimeout(() => toast.classList.add('show'), 10);
