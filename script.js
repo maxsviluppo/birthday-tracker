@@ -313,6 +313,9 @@ function createBirthdayCard(birthday) {
             </div>
 
             <div class="card-actions-icons">
+                <button class="icon-btn share-btn" title="Condividi">
+                    <i class="fas fa-share-alt"></i>
+                </button>
                 <button class="icon-btn edit-btn" title="Modifica">
                     <i class="fas fa-pen"></i>
                 </button>
@@ -322,6 +325,32 @@ function createBirthdayCard(birthday) {
             </div>
         </div>
     `;
+
+    // Share button
+    const shareBtn = card.querySelector('.share-btn');
+    shareBtn.addEventListener('click', async () => {
+        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
+📅 ${formattedDate}
+🎉 Farà ${nextAge} anni
+⏰ Mancano ${daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni'}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `Compleanno di ${formatName(birthday.person_name)}`,
+                    text: shareText
+                });
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    // Fallback: copy to clipboard
+                    copyToClipboard(shareText);
+                }
+            }
+        } else {
+            // Fallback: copy to clipboard
+            copyToClipboard(shareText);
+        }
+    });
 
     // Edit button
     const editBtn = card.querySelector('.edit-btn');
@@ -435,5 +464,30 @@ async function deleteAllBirthdays() {
     } else {
         showToast('Tutti i compleanni sono stati eliminati!', 'success');
         loadBirthdays();
+    }
+}
+
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Dati copiati negli appunti!', 'success');
+        }).catch(() => {
+            showToast('Impossibile copiare i dati', 'error');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast('Dati copiati negli appunti!', 'success');
+        } catch (err) {
+            showToast('Impossibile copiare i dati', 'error');
+        }
+        document.body.removeChild(textArea);
     }
 }

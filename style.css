@@ -575,24 +575,6 @@ body {
 }
 
 .icon-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transform: scale(1.1);
-}
-
-.edit-btn:hover {
-    color: #4facfe;
-    background: rgba(79, 172, 254, 0.15);
-}
-
-.delete-btn:hover {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.15);
-}
-
-/* ===== MODAL ===== */
-.modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
