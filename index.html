@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Birthday Tracker - Gestisci i Compleanni</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background">
+        <div class="confetti"></div>
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Auth Container -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fas fa-birthday-cake"></i>
+                <h1>Birthday Tracker</h1>
+                <p>Non dimenticare mai un compleanno!</p>
+            </div>
+
+            <div id="loginForm" class="auth-form">
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="tua@email.com" autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="La tua password"
+                        autocomplete="current-password">
+                </div>
+                <button id="loginBtn" class="primary-btn">
+                    <span>Accedi</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <p class="auth-switch">Non hai un account? <a href="#" id="showSignup">Registrati</a></p>
+            </div>
+
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="tua@email.com" autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Minimo 6 caratteri"
+                        autocomplete="new-password">
+                </div>
+                <button id="signupBtn" class="primary-btn">
+                    <span>Registrati</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <p class="auth-switch">Hai già un account? <a href="#" id="showLogin">Accedi</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="appContainer" class="container" style="display: none;">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <i class="fas fa-birthday-cake"></i>
+                    <div>
+                        <h1>Birthday Tracker</h1>
+                        <p id="userEmail"></p>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Esci</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Add Birthday Form -->
+        <div class="add-section">
+            <h2><i class="fas fa-plus-circle"></i> Aggiungi Compleanno</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="personName">Nome Persona</label>
+                    <input type="text" id="personName" placeholder="es. Mario Rossi">
+                </div>
+                <div class="input-group">
+                    <label for="birthDate">Data di Nascita</label>
+                    <input type="date" id="birthDate">
+                </div>
+            </div>
+            <button id="addBtn" class="primary-btn">
+                <i class="fas fa-gift"></i>
+                <span>Aggiungi Compleanno</span>
+            </button>
+        </div>
+
+        <!-- Birthdays List -->
+        <div class="birthdays-section">
+            <div class="section-header">
+                <h2><i class="fas fa-calendar-alt"></i> I Tuoi Compleanni</h2>
+                <div class="stats">
+                    <span id="totalCount">0 compleanni</span>
+                </div>
+            </div>
+            <div id="birthdaysList" class="birthdays-grid">
+                <!-- Birthday cards will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Modifica Compleanno</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="editPersonName">Nome Persona</label>
+                    <input type="text" id="editPersonName">
+                </div>
+                <div class="input-group">
+                    <label for="editBirthDate">Data di Nascita</label>
+                    <input type="date" id="editBirthDate">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEdit" class="secondary-btn">Annulla</button>
+                <button id="saveEdit" class="primary-btn">
+                    <i class="fas fa-save"></i>
+                    <span>Salva Modifiche</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
