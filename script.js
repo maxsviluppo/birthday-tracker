@@ -259,121 +259,242 @@ function sortByUpcoming(birthdays) {
         const daysA = getDaysUntilBirthday(a.birth_date);
         const daysB = getDaysUntilBirthday(b.birth_date);
         return daysA - daysB;
+    });
+}
+
+function createBirthdayCard(birthday) {
+    const card = document.createElement('div');
+    card.className = 'birthday-item';
+
+    const birthDate = new Date(birthday.birth_date);
+    const currentAge = calculateAge(birthday.birth_date);
+    const nextAge = currentAge + 1;
+    const daysUntil = getDaysUntilBirthday(birthday.birth_date);
+
+    // Add special classes
+    if (daysUntil === 0) {
+        card.classList.add('today');
+    } else if (daysUntil <= 7) {
+        card.classList.add('upcoming');
     }
 
-// ===== UTILITY FUNCTIONS =====
-function calculateAge(birthDate) {
-            const birth = new Date(birthDate);
-            const today = new Date();
-            let age = today.getFullYear() - birth.getFullYear();
-            const monthDiff = today.getMonth() - birth.getMonth();
+    const formattedDate = birthDate.toLocaleDateString('it-IT', {
+        day: 'numeric',
+        month: 'long'
+    });
 
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-                age--;
+    // Capitalize first letter of each word
+    const formatName = (name) => {
+        return name.toLowerCase().split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    };
+
+    // Format days badge text
+    let daysBadgeText;
+    if (daysUntil === 0) {
+        daysBadgeText = 'OGGI! 🎉';
+    } else if (daysUntil === 1) {
+        daysBadgeText = 'Domani!';
+    } else {
+        daysBadgeText = `tra ${daysUntil} gg`;
+    }
+
+    card.innerHTML = `
+        <div class="item-info">
+            <div class="item-name">${escapeHtml(formatName(birthday.person_name))}</div>
+            <div class="item-details">
+                <span>${formattedDate}</span>
+                <span class="days-badge">${daysBadgeText}</span>
+            </div>
+        </div>
+        
+        <div class="item-age">
+            <div class="age-number">${nextAge}</div>
+            <div class="age-label">anni</div>
+        </div>
+
+        <div class="item-actions">
+            <button class="action-btn share-btn" title="Condividi">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="action-btn edit-btn" title="Modifica">
+                <i class="fas fa-pen"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Elimina">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    // Share button
+    const shareBtn = card.querySelector('.share-btn');
+    shareBtn.addEventListener('click', async () => {
+        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
+📅 Data: ${formattedDate}
+🎉 Compie: ${nextAge} anni!
+        
+Non dimenticare di fare gli auguri!`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Promemoria Compleanno',
+                    text: shareText,
+                });
+            } catch (err) {
+                console.log('Error sharing:', err);
             }
-
-            return age;
+        } else {
+            // Fallback: Copy to clipboard
+            copyToClipboard(shareText);
+            showToast('Testo copiato negli appunti!', 'success');
         }
+    });
 
-function getDaysUntilBirthday(birthDate) {
-            const birth = new Date(birthDate);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+    // Edit button
+    const editBtn = card.querySelector('.edit-btn');
+    editBtn.addEventListener('click', () => {
+        currentEditId = birthday.id;
+        document.getElementById('editPersonName').value = birthday.person_name;
+        document.getElementById('editBirthDate').value = birthday.birth_date;
+        document.getElementById('editModal').classList.add('active');
+    });
 
-            // Set this year's birthday
-            const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
-            thisYearBirthday.setHours(0, 0, 0, 0);
-
-            // If birthday already passed this year, use next year
-            if (thisYearBirthday < today) {
-                thisYearBirthday.setFullYear(today.getFullYear() + 1);
-            }
-
-            // Calculate difference in days
-            const diffTime = thisYearBirthday - today;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-            return diffDays;
-        }
-
-function showAuth() {
-            document.getElementById('authContainer').style.display = 'flex';
-            document.getElementById('appContainer').style.display = 'none';
-        }
-
-function showApp() {
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'block';
-            document.getElementById('userEmail').textContent = currentUser.email;
-            loadBirthdays();
-        }
-
-function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-function showToast(message, type) {
-            const existingToast = document.querySelector('.toast');
-            if (existingToast) existingToast.remove();
-
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-
-            toast.innerHTML = `${icon} <span>${message}</span>`;
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('show'), 10);
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-async function deleteAllBirthdays() {
-            if (!currentUser) {
-                showToast('Errore: utente non autenticato', 'error');
-                return;
-            }
-
+    // Delete button
+    const deleteBtn = card.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', async () => {
+        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
             const { error } = await supabase
                 .from('birthdays')
                 .delete()
-                .eq('user_id', currentUser.id);
+                .eq('id', birthday.id);
 
             if (error) {
-                showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
+                showToast('Errore durante l\'eliminazione', 'error');
             } else {
-                showToast('Tutti i compleanni sono stati eliminati!', 'success');
+                showToast('Compleanno eliminato!', 'success');
                 loadBirthdays();
             }
         }
+    });
+
+    return card;
+}
+
+// ===== UTILITY FUNCTIONS =====
+function calculateAge(birthDate) {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
+function getDaysUntilBirthday(birthDate) {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Set this year's birthday
+    const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+    thisYearBirthday.setHours(0, 0, 0, 0);
+
+    // If birthday already passed this year, use next year
+    if (thisYearBirthday < today) {
+        thisYearBirthday.setFullYear(today.getFullYear() + 1);
+    }
+
+    // Calculate difference in days
+    const diffTime = thisYearBirthday - today;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+}
+
+function showAuth() {
+    document.getElementById('authContainer').style.display = 'flex';
+    document.getElementById('appContainer').style.display = 'none';
+}
+
+function showApp() {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'block';
+    document.getElementById('userEmail').textContent = currentUser.email;
+    loadBirthdays();
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function showToast(message, type) {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+
+    toast.innerHTML = `${icon} <span>${message}</span>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+
+async function deleteAllBirthdays() {
+    if (!currentUser) {
+        showToast('Errore: utente non autenticato', 'error');
+        return;
+    }
+
+    const { error } = await supabase
+        .from('birthdays')
+        .delete()
+        .eq('user_id', currentUser.id);
+
+    if (error) {
+        showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
+    } else {
+        showToast('Tutti i compleanni sono stati eliminati!', 'success');
+        loadBirthdays();
+    }
+}
 
 function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('Dati copiati negli appunti!', 'success');
-                }).catch(() => {
-                    showToast('Impossibile copiare i dati', 'error');
-                });
-            } else {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast('Dati copiati negli appunti!', 'success');
-                } catch (err) {
-                    showToast('Impossibile copiare i dati', 'error');
-                }
-                document.body.removeChild(textArea);
-            }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Dati copiati negli appunti!', 'success');
+        }).catch(() => {
+            showToast('Impossibile copiare i dati', 'error');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast('Dati copiati negli appunti!', 'success');
+        } catch (err) {
+            showToast('Impossibile copiare i dati', 'error');
         }
+        document.body.removeChild(textArea);
+    }
+}
