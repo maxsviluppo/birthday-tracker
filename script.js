@@ -462,10 +462,15 @@ function showToast(message, type) {
 }
 
 async function deleteAllBirthdays() {
+    if (!currentUser) {
+        showToast('Errore: utente non autenticato', 'error');
+        return;
+    }
+
     const { error } = await supabase
         .from('birthdays')
         .delete()
-        .gt('id', 0);
+        .eq('user_id', currentUser.id);
 
     if (error) {
         showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
