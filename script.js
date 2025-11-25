@@ -244,6 +244,9 @@ async function loadBirthdays() {
         return;
     }
 
+    // Cancella regalo e budget per compleanni passati
+    await clearPastBirthdayGifts(birthdays);
+
     // Sort by upcoming birthdays
     const sortedBirthdays = sortByUpcoming(birthdays);
     totalCount.textContent = `${birthdays.length} ${birthdays.length === 1 ? 'compleanno' : 'compleanni'}`;
@@ -252,6 +255,32 @@ async function loadBirthdays() {
         const card = createBirthdayCard(birthday);
         birthdaysList.appendChild(card);
     });
+}
+
+// Cancella regalo e budget per compleanni passati (giorni negativi)
+async function clearPastBirthdayGifts(birthdays) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (const birthday of birthdays) {
+        const daysUntil = getDaysUntilBirthday(birthday.birth_date);
+
+        // Se il compleanno è passato (giorni negativi o 365 = anno scorso)
+        // e ci sono dati regalo da cancellare
+        if (daysUntil > 300 && (birthday.gift_idea || birthday.budget)) {
+            await supabase
+                .from('birthdays')
+                .update({
+                    gift_idea: null,
+                    budget: null
+                })
+                .eq('id', birthday.id);
+
+            // Aggiorna l'oggetto locale
+            birthday.gift_idea = null;
+            birthday.budget = null;
+        }
+    }
 }
 
 function sortByUpcoming(birthdays) {
@@ -273,7 +302,6 @@ const formatCurrency = (value) => {
 
 const parseCurrency = (str) => {
     if (!str) return null;
-    // Rimuove punti migliaia, sostituisce virgola con punto
     const cleanStr = str.replace(/\./g, '').replace(',', '.');
     const floatVal = parseFloat(cleanStr);
     return isNaN(floatVal) ? null : floatVal;
@@ -323,8 +351,9 @@ function createBirthdayCard(birthday) {
     // Helper for safe value
     const safeValue = (val) => val ? escapeHtml(val) : '';
 
-    // HTML Icona Regalo (Emoji)
-    const giftIconHtml = `<span class="gift-emoji ${birthday.gift_idea ? 'visible' : ''}">🎁</span>`;
+    // HTML Icona Regalo (Emoji) - Visibile se c'è regalo O budget
+    const hasGiftData = birthday.gift_idea || birthday.budget;
+    const giftIconHtml = `<span class="gift-emoji ${hasGiftData ? 'visible' : ''}">🎁</span>`;
 
     card.innerHTML = `
         <div class="item-info">
@@ -371,10 +400,8 @@ function createBirthdayCard(birthday) {
 
     // Toggle Expansion Logic
     card.addEventListener('click', (e) => {
-        // Don't expand if clicking on actions or inputs
         if (e.target.closest('.item-actions') || e.target.closest('.gift-input')) return;
 
-        // Close other expanded items (optional UX choice)
         document.querySelectorAll('.birthday-item.expanded').forEach(item => {
             if (item !== card) item.classList.remove('expanded');
         });
@@ -389,10 +416,9 @@ function createBirthdayCard(birthday) {
 
     // Budget Input Formatting Logic
     budgetInput.addEventListener('focus', () => {
-        // Show raw number for editing (e.g., 1234.56)
         const val = parseCurrency(budgetInput.value);
         if (val !== null) {
-            budgetInput.value = val.toString().replace('.', ','); // Use comma for decimal in edit mode for IT users
+            budgetInput.value = val.toString().replace('.', ',');
         } else {
             budgetInput.value = '';
         }
@@ -403,33 +429,26 @@ function createBirthdayCard(birthday) {
     const saveGiftData = async () => {
         const giftIdea = giftInput.value.trim();
 
-        // Parse budget
         let budgetVal = null;
         if (budgetInput.value.trim() !== '') {
-            // Handle both comma and dot as decimal separator for robustness
             let rawVal = budgetInput.value.replace(/\./g, '').replace(',', '.');
-            // If user entered 1.234,56 -> 1234.56
-            // If user entered 1234,56 -> 1234.56
-            // If user entered 1234.56 -> 1234.56
             budgetVal = parseFloat(rawVal);
             if (isNaN(budgetVal)) budgetVal = null;
         }
 
-        // Re-format UI immediately
         budgetInput.value = formatCurrency(budgetVal);
 
-        // Update Icon Visibility
-        if (giftIdea) {
+        // Update Icon Visibility - Mostra se c'è regalo O budget
+        if (giftIdea || budgetVal) {
             giftEmoji.classList.add('visible');
         } else {
             giftEmoji.classList.remove('visible');
         }
 
-        // Optimistic UI: no spinner needed for auto-save, just save silently
         const { error } = await supabase
             .from('birthdays')
             .update({
-                gift_idea: giftIdea,
+                gift_idea: giftIdea || null,
                 budget: budgetVal
             })
             .eq('id', birthday.id);
@@ -443,7 +462,6 @@ function createBirthdayCard(birthday) {
     giftInput.addEventListener('blur', saveGiftData);
     budgetInput.addEventListener('blur', saveGiftData);
 
-    // Also save on Enter key
     giftInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') giftInput.blur(); });
     budgetInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') budgetInput.blur(); });
 
@@ -466,7 +484,6 @@ Non dimenticare di fare gli auguri!`;
                 console.log('Error sharing:', err);
             }
         } else {
-            // Fallback: Copy to clipboard
             copyToClipboard(shareText);
             showToast('Testo copiato negli appunti!', 'success');
         }
@@ -521,16 +538,13 @@ function getDaysUntilBirthday(birthDate) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Set this year's birthday
     const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
     thisYearBirthday.setHours(0, 0, 0, 0);
 
-    // If birthday already passed this year, use next year
     if (thisYearBirthday < today) {
         thisYearBirthday.setFullYear(today.getFullYear() + 1);
     }
 
-    // Calculate difference in days
     const diffTime = thisYearBirthday - today;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
@@ -602,7 +616,6 @@ function copyToClipboard(text) {
             showToast('Impossibile copiare i dati', 'error');
         });
     } else {
-        // Fallback for older browsers
         const textArea = document.createElement('textarea');
         textArea.value = text;
         textArea.style.position = 'fixed';
