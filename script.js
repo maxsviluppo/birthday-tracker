@@ -280,45 +280,42 @@ function createBirthdayCard(birthday) {
 
     const formattedDate = birthDate.toLocaleDateString('it-IT', {
         day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+        month: 'long'
     });
 
+    // Format days text
+    let daysText = '';
+    if (daysUntil === 0) daysText = 'Oggi! 🎉';
+    else if (daysUntil === 1) daysText = 'Domani! ⏰';
+    else daysText = `Mancano ${daysUntil} giorni`;
+
     card.innerHTML = `
-        <div class="card-name">${escapeHtml(birthday.person_name)}</div>
-        <div class="card-date">
-            <i class="fas fa-calendar"></i>
-            ${formattedDate}
-        </div>
-        <div class="card-info">
-            <div class="info-box">
-                <div class="info-label">Età Attuale</div>
-                <div class="info-value">${currentAge}</div>
+        <div class="card-content">
+            <div class="card-name">${escapeHtml(birthday.person_name)}</div>
+            <div class="card-meta">
+                <i class="fas fa-calendar-day"></i>
+                <span>${formattedDate} • ${daysText}</span>
             </div>
-            <div class="info-box">
-                <div class="info-label">Prossima Età</div>
-                <div class="info-value">${nextAge}</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">Giorni Mancanti</div>
-                <div class="info-value">${daysUntil}</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">Stato</div>
-                <div class="info-value" style="font-size: 1rem;">
-                    ${daysUntil === 0 ? '🎉 Oggi!' : daysUntil === 1 ? '⏰ Domani' : '📅 Prossimo'}
+            
+            <div class="card-stats">
+                <div class="stat-box">
+                    <div class="stat-label">Età Attuale</div>
+                    <div class="stat-value">${currentAge}</div>
+                </div>
+                <div class="stat-box highlight">
+                    <div class="stat-label">Farà</div>
+                    <div class="stat-value">${nextAge}</div>
                 </div>
             </div>
-        </div>
-        <div class="card-actions">
-            <button class="action-btn edit-btn">
-                <i class="fas fa-edit"></i>
-                Modifica
-            </button>
-            <button class="action-btn delete-btn">
-                <i class="fas fa-trash"></i>
-                Elimina
-            </button>
+
+            <div class="card-actions-icons">
+                <button class="icon-btn edit-btn" title="Modifica">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="icon-btn delete-btn" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
         </div>
     `;
 

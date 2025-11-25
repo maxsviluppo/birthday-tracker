@@ -89,7 +89,6 @@ body {
     }
 }
 
-/* Confetti particles */
 .confetti {
     position: absolute;
     width: 100%;
@@ -477,7 +476,6 @@ body {
     opacity: 1;
 }
 
-/* Upcoming birthday highlight */
 .birthday-card.upcoming {
     border-color: var(--gold);
     box-shadow: var(--glow-gold);
@@ -496,49 +494,116 @@ body {
     }
 }
 
-.card-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: var(--secondary-gradient);
-    margin-top: 20px;
+.card-content {
+    position: relative;
+    z-index: 2;
 }
 
-.action-btn {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
+.card-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #fff, #e0e0e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.card-meta i {
+    color: #4facfe;
+}
+
+/* ===== STATS GRID ===== */
+.card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
     transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.stat-box.highlight {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(196, 113, 237, 0.1) 100%);
+    border-color: rgba(255, 107, 157, 0.2);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ===== ACTION ICONS ===== */
+.card-actions-icons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+}
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    font-size: 1rem;
 }
 
-.edit-btn {
-    background: rgba(79, 172, 254, 0.2);
-    color: #4facfe;
-    border: 1px solid rgba(79, 172, 254, 0.3);
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.1);
 }
 
 .edit-btn:hover {
-    background: rgba(79, 172, 254, 0.3);
-    transform: translateY(-2px);
-    box-shadow: var(--glow-blue);
-}
-
-.delete-btn {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #4facfe;
+    background: rgba(79, 172, 254, 0.15);
 }
 
 .delete-btn:hover {
-    background: rgba(239, 68, 68, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
 }
 
 /* ===== MODAL ===== */
@@ -734,9 +799,6 @@ body {
     }
 }
 
-/* -------------------------------------------------
-   Layout per data + pulsante (desktop)
-   ------------------------------------------------- */
 .date-button-group {
     display: flex;
     align-items: flex-end;
@@ -747,45 +809,35 @@ body {
 .date-button-group .input-group {
     flex: 1;
     margin-bottom: 0;
-    /* Override default margin */
 }
 
 .date-button-group .primary-btn {
     white-space: nowrap;
     height: 54px;
-    /* Match input height roughly */
 }
 
-/* -------------------------------------------------
-   Mobile: metti data e pulsante in colonna con spazio
-   ------------------------------------------------- */
 @media (max-width: 600px) {
     .date-button-group {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
-        /* Increased gap */
     }
 
     .date-button-group .primary-btn {
         width: 100%;
         margin-top: 5px;
-        /* Extra space */
     }
 
     .date-button-group .input-group {
         margin-bottom: 0;
         width: 100%;
-        /* Ensure full width */
     }
 
     .date-button-group .input-group input {
         width: 100%;
-        /* Ensure input takes full width */
     }
 }
 
-/* Delete All Button Style */
 .delete-all-container {
     margin-top: 30px;
     text-align: center;
@@ -799,9 +851,9 @@ body {
     border: 1px solid rgba(239, 68, 68, 0.3);
     padding: 10px 20px;
     border-radius: 10px;
-    font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.3s;
+    font-weight: 600;
+    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -809,5 +861,7 @@ body {
 
 .delete-all-btn:hover {
     background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
 }
