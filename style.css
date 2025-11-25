@@ -403,6 +403,25 @@ body {
     margin-bottom: 20px;
 }
 
+.date-button-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.date-button-group .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.date-button-group .primary-btn {
+    width: auto;
+    margin-top: 0;
+    height: 54px;
+    /* Match input height */
+    padding: 0 30px;
+}
+
 /* ===== BIRTHDAYS SECTION ===== */
 .birthdays-section {
     margin-top: 40px;
@@ -456,6 +475,8 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    flex-wrap: wrap;
 }
 
 .birthday-item:hover {
@@ -593,29 +614,107 @@ body {
     border-left-color: #ffd700;
 }
 
-/* Responsive per mobile */
-@media (max-width: 480px) {
-    .birthday-item {
-        padding: 10px 12px;
-    }
+/* ===== GIFT SECTION ===== */
+.gift-section {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+    opacity: 0;
+    margin-top: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-    .item-name {
-        font-size: 1rem;
-    }
+.birthday-item.expanded .gift-section {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 15px;
+    padding-top: 15px;
+}
 
-    .item-details {
-        font-size: 0.75rem;
-    }
+.gift-container {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
 
-    .age-number {
-        font-size: 1.1rem;
-    }
+.gift-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
-    .action-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.75rem;
-    }
+.gift-input-group.main {
+    flex: 2;
+}
+
+.gift-input-group.budget {
+    flex: 1;
+    max-width: 140px;
+}
+
+.gift-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gift-label i {
+    color: #ffd700;
+}
+
+.gift-input {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.gift-input:focus {
+    outline: none;
+    border-color: #4facfe;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
+}
+
+/* ===== DELETE ALL BUTTON ===== */
+.delete-all-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+.delete-all-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.delete-all-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
 }
 
 /* ===== MODAL ===== */
@@ -815,26 +914,6 @@ body {
     }
 }
 
-.date-button-group {
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-}
-
-.date-button-group .input-group {
-    flex: 1;
-    margin-bottom: 0;
-}
-
-.date-button-group .primary-btn {
-    width: auto;
-    margin-top: 0;
-    height: 54px;
-    /* Match input height */
-    padding: 0 30px;
-}
-
-/* Mobile responsive fix for date input alignment */
 @media (max-width: 600px) {
     .date-button-group {
         flex-direction: column;
@@ -852,335 +931,52 @@ body {
         width: 100%;
     }
 
-    .date-button-group .input-group input {}
-
-    @keyframes slideUp {
-        from {
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .modal-header {
-        padding: 25px 30px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal-header h3 {
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .close-btn {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .close-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-        transform: rotate(90deg);
-    }
-
-    .modal-body {
-        padding: 30px;
-    }
-
-    .modal-footer {
-        padding: 20px 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        gap: 15px;
-        justify-content: flex-end;
-    }
-
-    .secondary-btn {
-        padding: 12px 24px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        color: var(--text-light);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .secondary-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--text-muted);
-    }
-
-    .empty-state i {
-        font-size: 80px;
-        margin-bottom: 20px;
-        opacity: 0.3;
-    }
-
-    .empty-state p {
-        font-size: 1.2rem;
-    }
-
-    /* ===== TOAST ===== */
-    .toast {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        padding: 16px 24px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: var(--shadow-3d);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transform: translateX(400px);
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 2000;
-    }
-
-    .toast.show {
-        transform: translateX(0);
-    }
-
-    .toast.success {
-        border-color: #22c55e;
-        color: #22c55e;
-    }
-
-    .toast.error {
-        border-color: #ef4444;
-        color: #ef4444;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .birthdays-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .header-content {
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-        }
-
-        .header-left {
-            flex-direction: column;
-        }
-
-        .auth-card {
-            padding: 40px 30px;
-        }
-
-        .card-stats {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .date-button-group {
-        display: flex;
-        align-items: flex-end;
-        gap: 12px;
-    }
-
-    .date-button-group .input-group {
-        flex: 1;
-        margin-bottom: 0;
-    }
-
-    .date-button-group .primary-btn {
-        width: auto;
-        margin-top: 0;
-        height: 54px;
-        /* Match input height */
-        padding: 0 30px;
-    }
-
-    /* Mobile responsive fix for date input alignment */
-    @media (max-width: 600px) {
-        .date-button-group {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 15px;
-        }
-
-        .date-button-group .primary-btn {
-            width: 100%;
-            margin-top: 0;
-        }
-
-        .date-button-group .input-group {
-            margin-bottom: 0;
-            width: 100%;
-        }
-
-        .date-button-group .input-group input {
-            width: 100%;
-            padding: 14px 18px;
-            box-sizing: border-box;
-        }
-
-        /* Fix alignment - ensure all inputs have same styling */
-        .input-group input[type="date"] {
-            width: 100%;
-            padding: 14px 18px;
-            margin: 0;
-        }
-    }
-
-    /* ===== DELETE ALL BUTTON ===== */
-    .delete-all-container {
-        margin-top: 40px;
-        display: flex;
-        justify-content: center;
-        padding-bottom: 40px;
-    }
-
-    .delete-all-btn {
-        background: rgba(239, 68, 68, 0.1);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #ef4444;
-        padding: 12px 24px;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-    }
-
-    .delete-all-btn:hover {
-        background: rgba(239, 68, 68, 0.2);
-        border-color: #ef4444;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
-    }
-
-    /* ===== EXPANDABLE ITEM & GIFT SECTION ===== */
-    .birthday-item {
-        cursor: pointer;
-        flex-wrap: wrap;
-        /* Allow wrapping for the gift section */
-    }
-
-    .gift-section {
+    .date-button-group .input-group input {
         width: 100%;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
-        opacity: 0;
-        margin-top: 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 14px 18px;
+        box-sizing: border-box;
     }
 
-    .birthday-item.expanded .gift-section {
-        max-height: 200px;
-        opacity: 1;
-        margin-top: 15px;
-        padding-top: 15px;
-    }
-
-    .gift-container {
-        display: flex;
-        gap: 15px;
-        align-items: flex-end;
-    }
-
-    .gift-input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .gift-input-group.main {
-        flex: 2;
-    }
-
-    .gift-input-group.budget {
-        flex: 1;
-        max-width: 140px;
-    }
-
-    .gift-label {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .gift-label i {
-        color: #ffd700;
-    }
-
-    .gift-input {
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 10px 12px;
-        color: var(--text-light);
-        font-size: 0.9rem;
+    /* Fix alignment - ensure all inputs have same styling */
+    .input-group input[type="date"] {
         width: 100%;
-        transition: all 0.3s;
-    }
-
-    .gift-input:focus {
-        outline: none;
-        border-color: #4facfe;
-        background: rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
+        padding: 14px 18px;
+        margin: 0;
     }
 
     /* Responsive Gift Section */
-    @media (max-width: 480px) {
-        .gift-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .gift-input-group.budget {
-            max-width: 100%;
-        }
-
-        .birthday-item.expanded .gift-section {
-            max-height: 300px;
-        }
+    .gift-container {
+        flex-direction: column;
+        align-items: stretch;
     }
+
+    .gift-input-group.budget {
+        max-width: 100%;
+    }
+
+    .birthday-item.expanded .gift-section {
+        max-height: 300px;
+    }
+
+    .birthday-item {
+        padding: 10px 12px;
+    }
+
+    .item-name {
+        font-size: 1rem;
+    }
+
+    .item-details {
+        font-size: 0.75rem;
+    }
+
+    .age-number {
+        font-size: 1.1rem;
+    }
+
+    .action-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+    }
+}
