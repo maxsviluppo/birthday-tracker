@@ -259,248 +259,121 @@ function sortByUpcoming(birthdays) {
         const daysA = getDaysUntilBirthday(a.birth_date);
         const daysB = getDaysUntilBirthday(b.birth_date);
         return daysA - daysB;
-    });
-}
-
-function createBirthdayCard(birthday) {
-    const card = document.createElement('div');
-    card.className = 'birthday-card';
-
-    const birthDate = new Date(birthday.birth_date);
-    const currentAge = calculateAge(birthday.birth_date);
-    const nextAge = currentAge + 1;
-    const daysUntil = getDaysUntilBirthday(birthday.birth_date);
-
-    // Add special classes
-    if (daysUntil === 0) {
-        card.classList.add('today');
-    } else if (daysUntil <= 7) {
-        card.classList.add('upcoming');
     }
-
-    const formattedDate = birthDate.toLocaleDateString('it-IT', {
-        day: 'numeric',
-        month: 'long'
-    });
-
-    // Capitalize first letter of each word
-    const formatName = (name) => {
-        return name.toLowerCase().split(' ').map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-    };
-
-    // Format days remaining text
-    let daysRemainingText;
-    if (daysUntil === 0) {
-        daysRemainingText = '🎉 OGGI! 🎉';
-    } else if (daysUntil === 1) {
-        daysRemainingText = 'Domani!';
-    } else {
-        daysRemainingText = daysUntil;
-    }
-
-    card.innerHTML = `
-        <div class="card-content">
-            <div class="card-name">${escapeHtml(formatName(birthday.person_name))}</div>
-            
-            <div class="card-stats">
-                <div class="stat-box">
-                    <div class="stat-label">Età Attuale</div>
-                    <div class="stat-value">${currentAge}</div>
-                </div>
-                <div class="stat-box highlight">
-                    <div class="stat-label">Compleanno</div>
-                    <div class="stat-value">${formattedDate}</div>
-                    <div class="stat-sublabel">${nextAge} anni</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">Giorni Mancanti</div>
-                    <div class="stat-value">${daysRemainingText}</div>
-                </div>
-            </div>
-
-            <div class="card-actions-icons">
-                <button class="icon-btn share-btn" title="Condividi">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-                <button class="icon-btn edit-btn" title="Modifica">
-                    <i class="fas fa-pen"></i>
-                </button>
-                <button class="icon-btn delete-btn" title="Elimina">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-
-    // Share button
-    const shareBtn = card.querySelector('.share-btn');
-    shareBtn.addEventListener('click', async () => {
-        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
-📅 ${formattedDate}
-🎉 Farà ${nextAge} anni
-⏰ Mancano ${daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni'}`;
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: `Compleanno di ${formatName(birthday.person_name)}`,
-                    text: shareText
-                });
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    copyToClipboard(shareText);
-                }
-            }
-        } else {
-            copyToClipboard(shareText);
-        }
-    });
-
-    // Edit button
-    const editBtn = card.querySelector('.edit-btn');
-    editBtn.addEventListener('click', () => {
-        currentEditId = birthday.id;
-        document.getElementById('editPersonName').value = birthday.person_name;
-        document.getElementById('editBirthDate').value = birthday.birth_date;
-        document.getElementById('editModal').classList.add('active');
-    });
-
-    // Delete button
-    const deleteBtn = card.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
-            const { error } = await supabase
-                .from('birthdays')
-                .delete()
-                .eq('id', birthday.id);
-
-            if (error) {
-                showToast('Errore nell\'eliminazione', 'error');
-            } else {
-                showToast('Compleanno eliminato', 'success');
-                loadBirthdays();
-            }
-        }
-    });
-
-    return card;
-}
 
 // ===== UTILITY FUNCTIONS =====
 function calculateAge(birthDate) {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
 
-    return age;
-}
+            return age;
+        }
 
 function getDaysUntilBirthday(birthDate) {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+            const birth = new Date(birthDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-    // Set this year's birthday
-    const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
-    thisYearBirthday.setHours(0, 0, 0, 0);
+            // Set this year's birthday
+            const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+            thisYearBirthday.setHours(0, 0, 0, 0);
 
-    // If birthday already passed this year, use next year
-    if (thisYearBirthday < today) {
-        thisYearBirthday.setFullYear(today.getFullYear() + 1);
-    }
+            // If birthday already passed this year, use next year
+            if (thisYearBirthday < today) {
+                thisYearBirthday.setFullYear(today.getFullYear() + 1);
+            }
 
-    // Calculate difference in days
-    const diffTime = thisYearBirthday - today;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            // Calculate difference in days
+            const diffTime = thisYearBirthday - today;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays;
-}
+            return diffDays;
+        }
 
 function showAuth() {
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('appContainer').style.display = 'none';
-}
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('appContainer').style.display = 'none';
+        }
 
 function showApp() {
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('appContainer').style.display = 'block';
-    document.getElementById('userEmail').textContent = currentUser.email;
-    loadBirthdays();
-}
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            document.getElementById('userEmail').textContent = currentUser.email;
+            loadBirthdays();
+        }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
 function showToast(message, type) {
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) existingToast.remove();
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
 
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
 
-    const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
+            const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
 
-    toast.innerHTML = `${icon} <span>${message}</span>`;
-    document.body.appendChild(toast);
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            document.body.appendChild(toast);
 
-    setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.add('show'), 10);
 
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
-}
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
 
 async function deleteAllBirthdays() {
-    if (!currentUser) {
-        showToast('Errore: utente non autenticato', 'error');
-        return;
-    }
+            if (!currentUser) {
+                showToast('Errore: utente non autenticato', 'error');
+                return;
+            }
 
-    const { error } = await supabase
-        .from('birthdays')
-        .delete()
-        .eq('user_id', currentUser.id);
+            const { error } = await supabase
+                .from('birthdays')
+                .delete()
+                .eq('user_id', currentUser.id);
 
-    if (error) {
-        showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
-    } else {
-        showToast('Tutti i compleanni sono stati eliminati!', 'success');
-        loadBirthdays();
-    }
-}
+            if (error) {
+                showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
+            } else {
+                showToast('Tutti i compleanni sono stati eliminati!', 'success');
+                loadBirthdays();
+            }
+        }
 
 function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            showToast('Dati copiati negli appunti!', 'success');
-        }).catch(() => {
-            showToast('Impossibile copiare i dati', 'error');
-        });
-    } else {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showToast('Dati copiati negli appunti!', 'success');
-        } catch (err) {
-            showToast('Impossibile copiare i dati', 'error');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Dati copiati negli appunti!', 'success');
+                }).catch(() => {
+                    showToast('Impossibile copiare i dati', 'error');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Dati copiati negli appunti!', 'success');
+                } catch (err) {
+                    showToast('Impossibile copiare i dati', 'error');
+                }
+                document.body.removeChild(textArea);
+            }
         }
-        document.body.removeChild(textArea);
-    }
-}

@@ -435,186 +435,207 @@ body {
     color: var(--text-muted);
 }
 
+/* ===== BIRTHDAY LIST ITEMS (NEW DESIGN) ===== */
 .birthdays-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* ===== BIRTHDAY CARD 3D ===== */
-.birthday-card {
+.birthday-item {
+    display: flex;
+    align-items: center;
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 25px;
+    backdrop-filter: blur(10px);
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 5px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
-    transform-style: preserve-3d;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: var(--shadow-3d);
     overflow: hidden;
 }
 
-.birthday-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--primary-gradient);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.birthday-card:hover {
-    transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
-    box-shadow: 0 30px 80px rgba(255, 107, 157, 0.4);
-}
-
-.birthday-card:hover::before {
-    opacity: 1;
-}
-
-/* Birthday today - special styling */
-.birthday-card.today {
-    border-color: var(--gold);
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
-    animation: pulse-glow 2s infinite;
-}
-
-.birthday-card.upcoming {
-    border-color: rgba(255, 215, 0, 0.3);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-}
-
-@keyframes pulse-glow {
-
-    0%,
-    100% {
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-    }
-
-    50% {
-        box-shadow: 0 0 50px rgba(255, 215, 0, 1);
-    }
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-}
-
-.card-name {
-    font-size: 1.6rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #a0e7ff 0%, #7dd3fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-transform: capitalize;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-}
-
-/* ===== STATS GRID ===== */
-.card-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.stat-box {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.stat-box:hover {
+.birthday-item:hover {
+    transform: translateX(5px);
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
+    border-left-color: #3b82f6;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.stat-box.highlight {
-    background: linear-gradient(135deg, rgba(125, 211, 252, 0.1) 0%, rgba(96, 165, 250, 0.1) 100%);
-    border-color: rgba(125, 211, 252, 0.2);
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    background: linear-gradient(135deg, #7dd3fc 0%, #60a5fa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 6px;
-    font-weight: 600;
-}
-
-.stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.stat-sublabel {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-top: 4px;
-}
-
-/* ===== ACTION ICONS ===== */
-.card-actions-icons {
+/* Parte Sinistra: Nome e Info */
+.item-info {
+    flex: 1;
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 15px;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    /* Prevent text overflow issues */
 }
 
-.icon-btn {
+.item-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-details {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.days-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+/* Parte Centrale: Età */
+.item-age {
+    text-align: center;
+    margin: 0 15px;
+    min-width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.age-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(45deg, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.age-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Parte Destra: Azioni */
+.item-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.action-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
     width: 36px;
     height: 36px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
 }
 
-.icon-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
     transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-.share-btn:hover {
-    color: #22c55e;
-    background: rgba(34, 197, 94, 0.15);
+.btn-share:hover {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+    border-color: rgba(74, 222, 128, 0.2);
 }
 
-.edit-btn:hover {
-    color: #4facfe;
-    background: rgba(79, 172, 254, 0.15);
+.btn-edit:hover {
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+    border-color: rgba(96, 165, 250, 0.2);
 }
 
-.delete-btn:hover {
+.btn-delete:hover {
     color: #ef4444;
-    background: rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* STATI SPECIALI */
+
+/* Oggi */
+.birthday-item.today {
+    border-left-color: #ef4444;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(30, 41, 59, 0.8));
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.birthday-item.today .days-badge {
+    background: #ef4444;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+}
+
+.birthday-item.today .age-number {
+    background: linear-gradient(45deg, #fff, #fca5a5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Prossimi */
+.birthday-item.upcoming {
+    border-left-color: #ffd700;
+}
+
+.birthday-item.upcoming .days-badge {
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    background: rgba(255, 215, 0, 0.05);
+}
+
+/* Responsive per mobile */
+@media (max-width: 480px) {
+    .birthday-item {
+        padding: 10px 12px;
+    }
+
+    .item-name {
+        font-size: 1rem;
+    }
+
+    .item-details {
+        font-size: 0.75rem;
+    }
+
+    .age-number {
+        font-size: 1.2rem;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+
+    .item-age {
+        margin: 0 10px;
+    }
 }
 
 /* ===== MODAL ===== */
@@ -880,6 +901,7 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
 }
+
 /* Fix date input alignment on mobile */
 input[type="date"] {
     padding: 14px 18px !important;
