@@ -279,65 +279,29 @@ function createBirthdayCard(birthday) {
     }
 
     const formattedDate = birthDate.toLocaleDateString('it-IT', {
-        day: 'numeric',
-        month: 'long'
-    });
-
-    const birthdayYear = birthDate.getFullYear();
-
-    // Capitalize first letter of each word
-    const formatName = (name) => {
-        return name.toLowerCase().split(' ').map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-    };
-
-    card.innerHTML = `
-        <div class="card-content">
-            <div class="card-name">${escapeHtml(formatName(birthday.person_name))}</div>
-            
-            <div class="card-stats">
-                <div class="stat-box">
-                    <div class="stat-label">Età Attuale</div>
-                    <div class="stat-value">${currentAge}</div>
-                </div>
-                <div class="stat-box highlight">
-                    <div class="stat-label">Compleanno</div>
-                    <div class="stat-value">${formattedDate}</div>
-                    <div class="stat-sublabel">${nextAge} anni</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">Giorni Mancanti</div>
-                    <div class="stat-value">${daysUntil === 0 ? 'Oggi! 🎉' : daysUntil}</div>
-                </div>
-            </div>
-
-            <div class="card-actions-icons">
-                <button class="icon-btn share-btn" title="Condividi">
-                    <i class="fas fa-share-alt"></i>
-                </button>
+                </button >
                 <button class="icon-btn edit-btn" title="Modifica">
                     <i class="fas fa-pen"></i>
                 </button>
                 <button class="icon-btn delete-btn" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
-            </div>
-        </div>
-    `;
+            </div >
+        </div >
+        `;
 
     // Share button
     const shareBtn = card.querySelector('.share-btn');
     shareBtn.addEventListener('click', async () => {
-        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
-📅 ${formattedDate}
-🎉 Farà ${nextAge} anni
-⏰ Mancano ${daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni'}`;
+        const shareText = `🎂 Compleanno di ${ formatName(birthday.person_name) }
+📅 ${ formattedDate }
+🎉 Farà ${ nextAge } anni
+⏰ Mancano ${ daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni' } `;
 
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `Compleanno di ${formatName(birthday.person_name)}`,
+                    title: `Compleanno di ${ formatName(birthday.person_name) } `,
                     text: shareText
                 });
             } catch (err) {
@@ -364,7 +328,7 @@ function createBirthdayCard(birthday) {
     // Delete button
     const deleteBtn = card.querySelector('.delete-btn');
     deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
+        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${ birthday.person_name }?`)) {
             const { error } = await supabase
                 .from('birthdays')
                 .delete()
@@ -438,11 +402,11 @@ function showToast(message, type) {
     if (existingToast) existingToast.remove();
 
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+    toast.className = `toast ${ type } `;
 
     const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
 
-    toast.innerHTML = `${icon} <span>${message}</span>`;
+    toast.innerHTML = `${ icon } <span>${message}</span>`;
     document.body.appendChild(toast);
 
     setTimeout(() => toast.classList.add('show'), 10);
