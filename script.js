@@ -285,9 +285,16 @@ function createBirthdayCard(birthday) {
 
     const birthdayYear = birthDate.getFullYear();
 
+    // Capitalize first letter of each word
+    const formatName = (name) => {
+        return name.toLowerCase().split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    };
+
     card.innerHTML = `
         <div class="card-content">
-            <div class="card-name">${escapeHtml(birthday.person_name)}</div>
+            <div class="card-name">${escapeHtml(formatName(birthday.person_name))}</div>
             
             <div class="card-stats">
                 <div class="stat-box">
