@@ -262,6 +262,23 @@ function sortByUpcoming(birthdays) {
     });
 }
 
+// ===== CURRENCY HELPERS =====
+const formatCurrency = (value) => {
+    if (value === null || value === undefined || value === '') return '';
+    return new Intl.NumberFormat('it-IT', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+};
+
+const parseCurrency = (str) => {
+    if (!str) return null;
+    // Rimuove punti migliaia, sostituisce virgola con punto
+    const cleanStr = str.replace(/\./g, '').replace(',', '.');
+    const floatVal = parseFloat(cleanStr);
+    return isNaN(floatVal) ? null : floatVal;
+};
+
 function createBirthdayCard(birthday) {
     const card = document.createElement('div');
     card.className = 'birthday-item';
@@ -306,9 +323,23 @@ function createBirthdayCard(birthday) {
     // Helper for safe value
     const safeValue = (val) => val ? escapeHtml(val) : '';
 
+    // HTML Icona 3D
+    const giftIconHtml = `
+        <div class="gift-3d-container ${birthday.gift_idea ? 'visible' : ''}">
+            <div class="gift-cube">
+                <div class="gift-face gift-face--front"></div>
+                <div class="gift-face gift-face--right"></div>
+                <div class="gift-face gift-face--top"></div>
+            </div>
+        </div>
+    `;
+
     card.innerHTML = `
         <div class="item-info">
-            <div class="item-name">${escapeHtml(formatName(birthday.person_name))}</div>
+            <div class="item-name">
+                ${escapeHtml(formatName(birthday.person_name))}
+                ${giftIconHtml}
+            </div>
             <div class="item-details">
                 <span>${formattedDate}</span>
                 <span class="${daysClass}">${daysText}</span>
@@ -340,7 +371,7 @@ function createBirthdayCard(birthday) {
                 </div>
                 <div class="gift-input-group budget">
                     <label class="gift-label"><i class="fas fa-euro-sign"></i> Budget</label>
-                    <input type="number" class="gift-input gift-budget" placeholder="0.00" step="0.01" value="${birthday.budget || ''}">
+                    <input type="text" class="gift-input gift-budget" placeholder="0,00" value="${formatCurrency(birthday.budget)}">
                 </div>
             </div>
         </div>
@@ -362,24 +393,57 @@ function createBirthdayCard(birthday) {
     // Auto-save Logic for Gift & Budget
     const giftInput = card.querySelector('.gift-idea');
     const budgetInput = card.querySelector('.gift-budget');
+    const giftIcon = card.querySelector('.gift-3d-container');
 
+    // Budget Input Formatting Logic
+    budgetInput.addEventListener('focus', () => {
+        // Show raw number for editing (e.g., 1234.56)
+        const val = parseCurrency(budgetInput.value);
+        if (val !== null) {
+            budgetInput.value = val.toString().replace('.', ','); // Use comma for decimal in edit mode for IT users
+        } else {
+            budgetInput.value = '';
+        }
+        budgetInput.select();
+    });
+
+    // Save on Blur
     const saveGiftData = async () => {
         const giftIdea = giftInput.value.trim();
-        const budgetVal = budgetInput.value;
-        const budget = budgetVal === '' ? null : parseFloat(budgetVal);
+
+        // Parse budget
+        let budgetVal = null;
+        if (budgetInput.value.trim() !== '') {
+            // Handle both comma and dot as decimal separator for robustness
+            let rawVal = budgetInput.value.replace(/\./g, '').replace(',', '.');
+            // If user entered 1.234,56 -> 1234.56
+            // If user entered 1234,56 -> 1234.56
+            // If user entered 1234.56 -> 1234.56
+            budgetVal = parseFloat(rawVal);
+            if (isNaN(budgetVal)) budgetVal = null;
+        }
+
+        // Re-format UI immediately
+        budgetInput.value = formatCurrency(budgetVal);
+
+        // Update Icon Visibility
+        if (giftIdea) {
+            giftIcon.classList.add('visible');
+        } else {
+            giftIcon.classList.remove('visible');
+        }
 
         // Optimistic UI: no spinner needed for auto-save, just save silently
         const { error } = await supabase
             .from('birthdays')
             .update({
                 gift_idea: giftIdea,
-                budget: budget
+                budget: budgetVal
             })
             .eq('id', birthday.id);
 
         if (error) {
             console.error('Error saving gift data:', error);
-            // Only show toast on error to avoid spamming success toasts
             showToast('Errore nel salvataggio dati', 'error');
         }
     };
