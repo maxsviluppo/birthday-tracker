@@ -303,6 +303,9 @@ function createBirthdayCard(birthday) {
         daysText = `- tra ${daysUntil} gg`;
     }
 
+    // Helper for safe value
+    const safeValue = (val) => val ? escapeHtml(val) : '';
+
     card.innerHTML = `
         <div class="item-info">
             <div class="item-name">${escapeHtml(formatName(birthday.person_name))}</div>
@@ -327,7 +330,66 @@ function createBirthdayCard(birthday) {
                 </button>
             </div>
         </div>
+
+        <!-- Hidden Gift Section -->
+        <div class="gift-section">
+            <div class="gift-container">
+                <div class="gift-input-group main">
+                    <label class="gift-label"><i class="fas fa-gift"></i> Idea Regalo</label>
+                    <input type="text" class="gift-input gift-idea" placeholder="Cosa vorrebbe ricevere?" value="${safeValue(birthday.gift_idea)}">
+                </div>
+                <div class="gift-input-group budget">
+                    <label class="gift-label"><i class="fas fa-euro-sign"></i> Budget</label>
+                    <input type="number" class="gift-input gift-budget" placeholder="0.00" step="0.01" value="${birthday.budget || ''}">
+                </div>
+            </div>
+        </div>
     `;
+
+    // Toggle Expansion Logic
+    card.addEventListener('click', (e) => {
+        // Don't expand if clicking on actions or inputs
+        if (e.target.closest('.item-actions') || e.target.closest('.gift-input')) return;
+
+        // Close other expanded items (optional UX choice)
+        document.querySelectorAll('.birthday-item.expanded').forEach(item => {
+            if (item !== card) item.classList.remove('expanded');
+        });
+
+        card.classList.toggle('expanded');
+    });
+
+    // Auto-save Logic for Gift & Budget
+    const giftInput = card.querySelector('.gift-idea');
+    const budgetInput = card.querySelector('.gift-budget');
+
+    const saveGiftData = async () => {
+        const giftIdea = giftInput.value.trim();
+        const budgetVal = budgetInput.value;
+        const budget = budgetVal === '' ? null : parseFloat(budgetVal);
+
+        // Optimistic UI: no spinner needed for auto-save, just save silently
+        const { error } = await supabase
+            .from('birthdays')
+            .update({
+                gift_idea: giftIdea,
+                budget: budget
+            })
+            .eq('id', birthday.id);
+
+        if (error) {
+            console.error('Error saving gift data:', error);
+            // Only show toast on error to avoid spamming success toasts
+            showToast('Errore nel salvataggio dati', 'error');
+        }
+    };
+
+    giftInput.addEventListener('blur', saveGiftData);
+    budgetInput.addEventListener('blur', saveGiftData);
+
+    // Also save on Enter key
+    giftInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') giftInput.blur(); });
+    budgetInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') budgetInput.blur(); });
 
     // Share button
     const shareBtn = card.querySelector('.share-btn');
