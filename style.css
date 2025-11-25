@@ -311,46 +311,53 @@ body {
 
 .header-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     background: var(--bg-card);
     backdrop-filter: blur(20px);
-    padding: 20px 30px;
+    padding: 30px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow-3d);
+    gap: 12px;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header-left i {
-    font-size: 40px;
-    background: var(--primary-gradient);
+.header-icon {
+    font-size: 50px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffffff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.header-left h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
     margin-bottom: 5px;
 }
 
-.header-left p {
+.header-content h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.user-email {
+    color: #60a5fa;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.stats {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 600;
     color: var(--text-muted);
     font-size: 0.9rem;
 }
 
 .logout-btn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     background: rgba(239, 68, 68, 0.1);
     border: 2px solid rgba(239, 68, 68, 0.3);
-    border-radius: 12px;
+    border-radius: 10px;
     color: #ef4444;
     font-weight: 600;
     cursor: pointer;
@@ -358,6 +365,8 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
+    margin-top: 5px;
 }
 
 .logout-btn:hover {
@@ -418,7 +427,6 @@ body {
     width: auto;
     margin-top: 0;
     height: 54px;
-    /* Match input height */
     padding: 0 30px;
 }
 
@@ -445,16 +453,7 @@ body {
     color: #00f2fe;
 }
 
-.stats {
-    background: var(--bg-card);
-    padding: 10px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-/* ===== BIRTHDAY LIST ITEMS (NEW DESIGN) ===== */
+/* ===== BIRTHDAY LIST ITEMS ===== */
 .birthdays-grid {
     display: flex;
     flex-direction: column;
@@ -486,7 +485,6 @@ body {
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Parte Sinistra: Nome e Info */
 .item-info {
     flex: 1;
     display: flex;
@@ -518,7 +516,6 @@ body {
 
 .days-text {
     color: #4ade80;
-    /* Verde */
     font-weight: 500;
 }
 
@@ -527,12 +524,10 @@ body {
     font-weight: 700;
 }
 
-/* Parte Destra: Colonna Unica */
 .item-right {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /* Allinea a destra */
     justify-content: center;
     gap: 2px;
     margin-left: 15px;
@@ -544,7 +539,6 @@ body {
     font-weight: 700;
     line-height: 1;
     color: #60a5fa;
-    /* Azzurro */
 }
 
 .age-label {
@@ -554,7 +548,6 @@ body {
     margin-bottom: 4px;
 }
 
-/* Parte Destra: Azioni */
 .item-actions {
     display: flex;
     gap: 5px;
@@ -565,7 +558,6 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
     width: 28px;
-    /* Icone più piccole */
     height: 28px;
     border-radius: 8px;
     display: flex;
@@ -601,7 +593,6 @@ body {
     border-color: rgba(239, 68, 68, 0.2);
 }
 
-/* STATI SPECIALI */
 .birthday-item.today {
     border-left-color: #ef4444;
     background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(30, 41, 59, 0.8));
@@ -647,98 +638,29 @@ body {
     box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
 }
 
-/* ===== GIFT ICON 3D ISOMETRIC CARTOON ===== */
-.gift-3d-container {
+/* ===== GIFT EMOJI ===== */
+.gift-emoji {
+    font-size: 1.4rem;
+    margin-left: 8px;
+    cursor: help;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: inline-block;
-    width: 22px;
-    height: 22px;
-    margin-left: 10px;
-    perspective: 400px;
-    vertical-align: middle;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
 }
 
-.gift-3d-container.visible {
-    opacity: 1;
-    transform: scale(1);
+.gift-emoji:not(.visible) {
+    display: none;
 }
 
-.gift-cube {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-    transform: rotateX(-30deg) rotateY(45deg);
-}
+@keyframes popIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
 
-.gift-face {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #1a1a1a;
-    /* Bordo nero cartoon */
-    box-sizing: border-box;
-}
-
-/* Colori piatti per effetto cartoon */
-.gift-face--front {
-    transform: rotateY(0deg) translateZ(10px);
-    background: #FFD700;
-    /* Giallo Frontale */
-}
-
-.gift-face--right {
-    transform: rotateY(90deg) translateZ(10px);
-    background: #DAA520;
-    /* Giallo Scuro (Ombra) */
-}
-
-.gift-face--top {
-    transform: rotateX(90deg) translateZ(10px);
-    background: #FFFF00;
-    /* Giallo Chiaro (Luce) */
-}
-
-/* Nastro Rosso con bordi */
-.gift-face::before,
-.gift-face::after {
-    content: '';
-    position: absolute;
-    background: #FF4444;
-    border: 1px solid #1a1a1a;
-}
-
-/* Nastri Facce Laterali */
-.gift-face--front::before {
-    width: 6px;
-    height: 20px;
-    left: 5px;
-    top: -2px;
-}
-
-.gift-face--right::before {
-    width: 6px;
-    height: 20px;
-    left: 5px;
-    top: -2px;
-}
-
-/* Nastro Top (Croce) */
-.gift-face--top::before {
-    width: 6px;
-    height: 20px;
-    left: 5px;
-    top: -2px;
-}
-
-.gift-face--top::after {
-    width: 20px;
-    height: 6px;
-    top: 5px;
-    left: -2px;
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* ===== GIFT SECTION ===== */
@@ -991,22 +913,8 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .header-content {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
-
-    .header-left {
-        flex-direction: column;
-    }
-
     .auth-card {
         padding: 40px 30px;
-    }
-
-    .card-stats {
-        grid-template-columns: 1fr;
     }
 }
 
@@ -1033,14 +941,12 @@ body {
         box-sizing: border-box;
     }
 
-    /* Fix alignment - ensure all inputs have same styling */
     .input-group input[type="date"] {
         width: 100%;
         padding: 14px 18px;
         margin: 0;
     }
 
-    /* Responsive Gift Section */
     .gift-container {
         flex-direction: column;
         align-items: stretch;
