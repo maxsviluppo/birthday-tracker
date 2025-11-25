@@ -279,39 +279,81 @@ function createBirthdayCard(birthday) {
     }
 
     const formattedDate = birthDate.toLocaleDateString('it-IT', {
-                </button >
+        day: 'numeric',
+        month: 'long'
+    });
+
+    // Capitalize first letter of each word
+    const formatName = (name) => {
+        return name.toLowerCase().split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+    };
+
+    // Format days remaining text
+    let daysRemainingText;
+    if (daysUntil === 0) {
+        daysRemainingText = '🎉 OGGI! 🎉';
+    } else if (daysUntil === 1) {
+        daysRemainingText = 'Domani!';
+    } else {
+        daysRemainingText = daysUntil;
+    }
+
+    card.innerHTML = `
+        <div class="card-content">
+            <div class="card-name">${escapeHtml(formatName(birthday.person_name))}</div>
+            
+            <div class="card-stats">
+                <div class="stat-box">
+                    <div class="stat-label">Età Attuale</div>
+                    <div class="stat-value">${currentAge}</div>
+                </div>
+                <div class="stat-box highlight">
+                    <div class="stat-label">Compleanno</div>
+                    <div class="stat-value">${formattedDate}</div>
+                    <div class="stat-sublabel">${nextAge} anni</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Giorni Mancanti</div>
+                    <div class="stat-value">${daysRemainingText}</div>
+                </div>
+            </div>
+
+            <div class="card-actions-icons">
+                <button class="icon-btn share-btn" title="Condividi">
+                    <i class="fas fa-share-alt"></i>
+                </button>
                 <button class="icon-btn edit-btn" title="Modifica">
                     <i class="fas fa-pen"></i>
                 </button>
                 <button class="icon-btn delete-btn" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
-            </div >
-        </div >
-        `;
+            </div>
+        </div>
+    `;
 
     // Share button
     const shareBtn = card.querySelector('.share-btn');
     shareBtn.addEventListener('click', async () => {
-        const shareText = `🎂 Compleanno di ${ formatName(birthday.person_name) }
-📅 ${ formattedDate }
-🎉 Farà ${ nextAge } anni
-⏰ Mancano ${ daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni' } `;
+        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
+📅 ${formattedDate}
+🎉 Farà ${nextAge} anni
+⏰ Mancano ${daysUntil === 0 ? 'Oggi è il compleanno!' : daysUntil + ' giorni'}`;
 
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `Compleanno di ${ formatName(birthday.person_name) } `,
+                    title: `Compleanno di ${formatName(birthday.person_name)}`,
                     text: shareText
                 });
             } catch (err) {
                 if (err.name !== 'AbortError') {
-                    // Fallback: copy to clipboard
                     copyToClipboard(shareText);
                 }
             }
         } else {
-            // Fallback: copy to clipboard
             copyToClipboard(shareText);
         }
     });
@@ -328,7 +370,7 @@ function createBirthdayCard(birthday) {
     // Delete button
     const deleteBtn = card.querySelector('.delete-btn');
     deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${ birthday.person_name }?`)) {
+        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
             const { error } = await supabase
                 .from('birthdays')
                 .delete()
@@ -363,9 +405,11 @@ function calculateAge(birthDate) {
 function getDaysUntilBirthday(birthDate) {
     const birth = new Date(birthDate);
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     // Set this year's birthday
     const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+    thisYearBirthday.setHours(0, 0, 0, 0);
 
     // If birthday already passed this year, use next year
     if (thisYearBirthday < today) {
@@ -374,7 +418,7 @@ function getDaysUntilBirthday(birthDate) {
 
     // Calculate difference in days
     const diffTime = thisYearBirthday - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     return diffDays;
 }
@@ -402,11 +446,11 @@ function showToast(message, type) {
     if (existingToast) existingToast.remove();
 
     const toast = document.createElement('div');
-    toast.className = `toast ${ type } `;
+    toast.className = `toast ${type}`;
 
     const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
 
-    toast.innerHTML = `${ icon } <span>${message}</span>`;
+    toast.innerHTML = `${icon} <span>${message}</span>`;
     document.body.appendChild(toast);
 
     setTimeout(() => toast.classList.add('show'), 10);
@@ -421,7 +465,7 @@ async function deleteAllBirthdays() {
     const { error } = await supabase
         .from('birthdays')
         .delete()
-        .gt('id', 0); // Delete all rows where id > 0
+        .gt('id', 0);
 
     if (error) {
         showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
