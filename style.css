@@ -444,6 +444,7 @@ body {
 
 .birthday-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     background: var(--bg-card);
     backdrop-filter: blur(10px);
@@ -471,7 +472,6 @@ body {
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    /* Prevent text overflow issues */
 }
 
 .item-name {
@@ -489,65 +489,68 @@ body {
     color: var(--text-muted);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     flex-wrap: wrap;
 }
 
-.days-badge {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    white-space: nowrap;
+.days-text {
+    color: #4ade80;
+    /* Verde */
+    font-weight: 500;
 }
 
-/* Parte Centrale: Età */
-.item-age {
-    text-align: center;
-    margin: 0 15px;
-    min-width: 50px;
+.days-text.today {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+/* Parte Destra: Colonna Unica */
+.item-right {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
+    /* Allinea a destra */
     justify-content: center;
+    gap: 2px;
+    margin-left: 15px;
+    text-align: right;
 }
 
 .age-number {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
     line-height: 1;
-    background: linear-gradient(45deg, #fff, #cbd5e1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #60a5fa;
+    /* Azzurro */
 }
 
 .age-label {
     font-size: 0.7rem;
     color: var(--text-muted);
     text-transform: uppercase;
-    margin-top: 2px;
+    margin-bottom: 4px;
 }
 
 /* Parte Destra: Azioni */
 .item-actions {
     display: flex;
-    gap: 6px;
+    gap: 5px;
 }
 
 .action-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.05);
     color: var(--text-muted);
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 28px;
+    /* Icone più piccole */
+    height: 28px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .action-btn:hover {
@@ -576,37 +579,18 @@ body {
 }
 
 /* STATI SPECIALI */
-
-/* Oggi */
 .birthday-item.today {
     border-left-color: #ef4444;
     background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(30, 41, 59, 0.8));
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
 }
 
-.birthday-item.today .days-badge {
-    background: #ef4444;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
-}
-
 .birthday-item.today .age-number {
-    background: linear-gradient(45deg, #fff, #fca5a5);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ef4444;
 }
 
-/* Prossimi */
 .birthday-item.upcoming {
     border-left-color: #ffd700;
-}
-
-.birthday-item.upcoming .days-badge {
-    color: #ffd700;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    background: rgba(255, 215, 0, 0.05);
 }
 
 /* Responsive per mobile */
@@ -624,17 +608,13 @@ body {
     }
 
     .age-number {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .action-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.8rem;
-    }
-
-    .item-age {
-        margin: 0 10px;
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
     }
 }
 
@@ -839,7 +819,6 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 12px;
-    margin-top: 20px;
 }
 
 .date-button-group .input-group {
@@ -848,10 +827,14 @@ body {
 }
 
 .date-button-group .primary-btn {
-    white-space: nowrap;
+    width: auto;
+    margin-top: 0;
     height: 54px;
+    /* Match input height */
+    padding: 0 30px;
 }
 
+/* Mobile responsive fix for date input alignment */
 @media (max-width: 600px) {
     .date-button-group {
         flex-direction: column;
@@ -861,7 +844,7 @@ body {
 
     .date-button-group .primary-btn {
         width: 100%;
-        margin-top: 5px;
+        margin-top: 0;
     }
 
     .date-button-group .input-group {
@@ -871,39 +854,14 @@ body {
 
     .date-button-group .input-group input {
         width: 100%;
+        padding: 14px 18px;
+        box-sizing: border-box;
     }
-}
 
-.delete-all-container {
-    margin-top: 30px;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-}
-
-.delete-all-btn {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.delete-all-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: #ef4444;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-}
-
-/* Fix date input alignment on mobile */
-input[type="date"] {
-    padding: 14px 18px !important;
-    box-sizing: border-box;
+    /* Fix alignment - ensure all inputs have same styling */
+    .input-group input[type="date"] {
+        width: 100%;
+        padding: 14px 18px;
+        margin: 0;
+    }
 }

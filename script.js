@@ -291,13 +291,16 @@ function createBirthdayCard(birthday) {
     };
 
     // Format days badge text
-    let daysBadgeText;
+    let daysText;
+    let daysClass = 'days-text';
+
     if (daysUntil === 0) {
-        daysBadgeText = 'OGGI! 🎉';
+        daysText = 'OGGI! 🎉';
+        daysClass += ' today';
     } else if (daysUntil === 1) {
-        daysBadgeText = 'Domani!';
+        daysText = '- Domani!';
     } else {
-        daysBadgeText = `tra ${daysUntil} gg`;
+        daysText = `- tra ${daysUntil} gg`;
     }
 
     card.innerHTML = `
@@ -305,25 +308,24 @@ function createBirthdayCard(birthday) {
             <div class="item-name">${escapeHtml(formatName(birthday.person_name))}</div>
             <div class="item-details">
                 <span>${formattedDate}</span>
-                <span class="days-badge">${daysBadgeText}</span>
+                <span class="${daysClass}">${daysText}</span>
             </div>
         </div>
         
-        <div class="item-age">
+        <div class="item-right">
             <div class="age-number">${nextAge}</div>
             <div class="age-label">anni</div>
-        </div>
-
-        <div class="item-actions">
-            <button class="action-btn share-btn" title="Condividi">
-                <i class="fas fa-share-alt"></i>
-            </button>
-            <button class="action-btn edit-btn" title="Modifica">
-                <i class="fas fa-pen"></i>
-            </button>
-            <button class="action-btn delete-btn" title="Elimina">
-                <i class="fas fa-trash"></i>
-            </button>
+            <div class="item-actions">
+                <button class="action-btn share-btn" title="Condividi">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <button class="action-btn edit-btn" title="Modifica">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="action-btn delete-btn" title="Elimina">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
         </div>
     `;
 
