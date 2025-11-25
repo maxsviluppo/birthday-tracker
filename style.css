@@ -502,33 +502,20 @@ body {
 .card-name {
     font-size: 1.6rem;
     font-weight: 700;
-    background: linear-gradient(to right, #fff, #e0e0e0);
+    background: linear-gradient(135deg, #a0e7ff 0%, #7dd3fc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 5px;
-    letter-spacing: 0.5px;
-}
-
-.card-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
+    text-transform: capitalize;
     margin-bottom: 20px;
-    font-weight: 500;
-}
-
-.card-meta i {
-    color: #4facfe;
+    letter-spacing: 0.5px;
 }
 
 /* ===== STATS GRID ===== */
 .card-stats {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
     margin-bottom: 20px;
 }
 
@@ -548,22 +535,35 @@ body {
 }
 
 .stat-box.highlight {
-    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(196, 113, 237, 0.1) 100%);
-    border-color: rgba(255, 107, 157, 0.2);
+    background: linear-gradient(135deg, rgba(125, 211, 252, 0.1) 0%, rgba(96, 165, 250, 0.1) 100%);
+    border-color: rgba(125, 211, 252, 0.2);
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 4px;
+    letter-spacing: 1.2px;
+    background: linear-gradient(135deg, #7dd3fc 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+    font-weight: 600;
 }
 
 .stat-value {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #fff;
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-sublabel {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
 }
 
 /* ===== ACTION ICONS ===== */
@@ -796,6 +796,10 @@ body {
 
     .auth-card {
         padding: 40px 30px;
+    }
+
+    .card-stats {
+        grid-template-columns: 1fr;
     }
 }
 

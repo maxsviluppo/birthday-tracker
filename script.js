@@ -283,19 +283,11 @@ function createBirthdayCard(birthday) {
         month: 'long'
     });
 
-    // Format days text
-    let daysText = '';
-    if (daysUntil === 0) daysText = 'Oggi! 🎉';
-    else if (daysUntil === 1) daysText = 'Domani! ⏰';
-    else daysText = `Mancano ${daysUntil} giorni`;
+    const birthdayYear = birthDate.getFullYear();
 
     card.innerHTML = `
         <div class="card-content">
             <div class="card-name">${escapeHtml(birthday.person_name)}</div>
-            <div class="card-meta">
-                <i class="fas fa-calendar-day"></i>
-                <span>${formattedDate} • ${daysText}</span>
-            </div>
             
             <div class="card-stats">
                 <div class="stat-box">
@@ -303,8 +295,13 @@ function createBirthdayCard(birthday) {
                     <div class="stat-value">${currentAge}</div>
                 </div>
                 <div class="stat-box highlight">
-                    <div class="stat-label">Farà</div>
-                    <div class="stat-value">${nextAge}</div>
+                    <div class="stat-label">Compleanno</div>
+                    <div class="stat-value">${formattedDate}</div>
+                    <div class="stat-sublabel">${nextAge} anni</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Giorni Mancanti</div>
+                    <div class="stat-value">${daysUntil === 0 ? 'Oggi! 🎉' : daysUntil}</div>
                 </div>
             </div>
 
