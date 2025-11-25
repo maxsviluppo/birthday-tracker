@@ -323,16 +323,8 @@ function createBirthdayCard(birthday) {
     // Helper for safe value
     const safeValue = (val) => val ? escapeHtml(val) : '';
 
-    // HTML Icona 3D
-    const giftIconHtml = `
-        <div class="gift-3d-container ${birthday.gift_idea ? 'visible' : ''}">
-            <div class="gift-cube">
-                <div class="gift-face gift-face--front"></div>
-                <div class="gift-face gift-face--right"></div>
-                <div class="gift-face gift-face--top"></div>
-            </div>
-        </div>
-    `;
+    // HTML Icona Regalo (Emoji)
+    const giftIconHtml = `<span class="gift-emoji ${birthday.gift_idea ? 'visible' : ''}">🎁</span>`;
 
     card.innerHTML = `
         <div class="item-info">
@@ -393,7 +385,7 @@ function createBirthdayCard(birthday) {
     // Auto-save Logic for Gift & Budget
     const giftInput = card.querySelector('.gift-idea');
     const budgetInput = card.querySelector('.gift-budget');
-    const giftIcon = card.querySelector('.gift-3d-container');
+    const giftEmoji = card.querySelector('.gift-emoji');
 
     // Budget Input Formatting Logic
     budgetInput.addEventListener('focus', () => {
@@ -428,9 +420,9 @@ function createBirthdayCard(birthday) {
 
         // Update Icon Visibility
         if (giftIdea) {
-            giftIcon.classList.add('visible');
+            giftEmoji.classList.add('visible');
         } else {
-            giftIcon.classList.remove('visible');
+            giftEmoji.classList.remove('visible');
         }
 
         // Optimistic UI: no spinner needed for auto-save, just save silently
