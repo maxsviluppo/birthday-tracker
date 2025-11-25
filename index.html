@@ -92,28 +92,24 @@
         <div class="add-section">
             <h2><i class="fas fa-plus-circle"></i> Aggiungi Compleanno</h2>
 
-            <!-- Nome + Icona Calendario + Pulsante -->
-            <div class="add-birthday-row">
-                <div class="input-group name-calendar-group">
+            <!-- Nome Persona -->
+            <div class="form-grid">
+                <div class="input-group">
                     <label for="personName">Nome Persona</label>
-                    <div class="name-calendar-wrapper">
-                        <input type="text" id="personName" placeholder="es. Mario Rossi">
-                        <button type="button" id="calendarBtn" class="calendar-btn" title="Seleziona data">
-                            <i class="fas fa-calendar-alt"></i>
-                        </button>
-                        <input type="date" id="birthDate" class="hidden-date-input">
-                    </div>
+                    <input type="text" id="personName" placeholder="es. Mario Rossi">
                 </div>
-                <button id="addBtn" class="primary-btn add-btn-inline">
-                    <i class="fas fa-gift"></i>
-                    <span>Aggiungi</span>
-                </button>
             </div>
 
-            <!-- Data selezionata (conferma visiva) -->
-            <div id="selectedDateDisplay" class="selected-date-display" style="display: none;">
-                <i class="fas fa-check-circle"></i>
-                <span id="selectedDateText"></span>
+            <!-- Data + Pulsante -->
+            <div class="date-button-group">
+                <div class="input-group">
+                    <label for="birthDate">Data di Nascita</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <button id="addBtn" class="primary-btn">
+                    <i class="fas fa-gift"></i>
+                    <span>Aggiungi Compleanno</span>
+                </button>
             </div>
         </div>
 
