@@ -642,6 +642,108 @@ body {
 
 .delete-all-btn:hover {
     background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+}
+
+/* ===== GIFT ICON 3D ISOMETRIC CARTOON ===== */
+.gift-3d-container {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-left: 10px;
+    perspective: 400px;
+    vertical-align: middle;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+}
+
+.gift-3d-container.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gift-cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg) rotateY(45deg);
+}
+
+.gift-face {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #1a1a1a;
+    /* Bordo nero cartoon */
+    box-sizing: border-box;
+}
+
+/* Colori piatti per effetto cartoon */
+.gift-face--front {
+    transform: rotateY(0deg) translateZ(10px);
+    background: #FFD700;
+    /* Giallo Frontale */
+}
+
+.gift-face--right {
+    transform: rotateY(90deg) translateZ(10px);
+    background: #DAA520;
+    /* Giallo Scuro (Ombra) */
+}
+
+.gift-face--top {
+    transform: rotateX(90deg) translateZ(10px);
+    background: #FFFF00;
+    /* Giallo Chiaro (Luce) */
+}
+
+/* Nastro Rosso con bordi */
+.gift-face::before,
+.gift-face::after {
+    content: '';
+    position: absolute;
+    background: #FF4444;
+    border: 1px solid #1a1a1a;
+}
+
+/* Nastri Facce Laterali */
+.gift-face--front::before {
+    width: 6px;
+    height: 20px;
+    left: 5px;
+    top: -2px;
+}
+
+.gift-face--right::before {
+    width: 6px;
+    height: 20px;
+    left: 5px;
+    top: -2px;
+}
+
+/* Nastro Top (Croce) */
+.gift-face--top::before {
+    width: 6px;
+    height: 20px;
+    left: 5px;
+    top: -2px;
+}
+
+.gift-face--top::after {
+    width: 20px;
+    height: 6px;
+    top: 5px;
+    left: -2px;
+}
+
+/* ===== GIFT SECTION ===== */
+.gift-section {
+    width: 100%;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
