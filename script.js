@@ -163,6 +163,16 @@ function initializeAppListeners() {
         showToast('Disconnesso!', 'success');
     });
 
+    // Delete All Button
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', async () => {
+            if (confirm('Sei sicuro di voler eliminare TUTTI i compleanni? Questa azione non può essere annullata.')) {
+                await deleteAllBirthdays();
+            }
+        });
+    }
+
     // Modal controls
     closeModal.addEventListener('click', () => {
         document.getElementById('editModal').classList.remove('active');
@@ -411,4 +421,18 @@ function showToast(message, type) {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
     }, 3000);
+}
+
+async function deleteAllBirthdays() {
+    const { error } = await supabase
+        .from('birthdays')
+        .delete()
+        .gt('id', 0); // Delete all rows where id > 0
+
+    if (error) {
+        showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
+    } else {
+        showToast('Tutti i compleanni sono stati eliminati!', 'success');
+        loadBirthdays();
+    }
 }
