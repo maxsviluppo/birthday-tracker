@@ -114,31 +114,6 @@ function initializeAppListeners() {
     const closeModal = document.getElementById('closeModal');
     const cancelEdit = document.getElementById('cancelEdit');
     const saveEdit = document.getElementById('saveEdit');
-    const calendarBtn = document.getElementById('calendarBtn');
-    const birthDateInput = document.getElementById('birthDate');
-    const selectedDateDisplay = document.getElementById('selectedDateDisplay');
-    const selectedDateText = document.getElementById('selectedDateText');
-
-    // Calendar Button - Opens date picker
-    calendarBtn.addEventListener('click', () => {
-        birthDateInput.showPicker();
-    });
-
-    // Date Input Change - Show selected date
-    birthDateInput.addEventListener('change', () => {
-        if (birthDateInput.value) {
-            const date = new Date(birthDateInput.value);
-            const formattedDate = date.toLocaleDateString('it-IT', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-            selectedDateText.textContent = `Data selezionata: ${formattedDate}`;
-            selectedDateDisplay.style.display = 'flex';
-        } else {
-            selectedDateDisplay.style.display = 'none';
-        }
-    });
 
     // Add Birthday
     addBtn.addEventListener('click', async () => {
@@ -175,7 +150,6 @@ function initializeAppListeners() {
             showToast('Compleanno aggiunto!', 'success');
             document.getElementById('personName').value = '';
             document.getElementById('birthDate').value = '';
-            selectedDateDisplay.style.display = 'none';
             loadBirthdays();
         }
 
