@@ -141,7 +141,8 @@ function initializeAppListeners() {
             .insert([{
                 user_id: currentUser.id,
                 person_name: name,
-                birth_date: date
+                birth_date: date,
+                app_type: 'birthday-tracker'
             }]);
 
         if (error) {
@@ -166,43 +167,33 @@ function initializeAppListeners() {
     // Delete Account
     const deleteAccountBtn = document.getElementById('deleteAccountBtn');
     deleteAccountBtn.addEventListener('click', async () => {
-        const confirmFirst = confirm('⚠️ ATTENZIONE! Stai per eliminare il tuo account.\n\nQuesta azione eliminerà:\n- Il tuo account\n- Tutti i tuoi compleanni salvati\n- Tutti i dati associati\n\nQuesta operazione è IRREVERSIBILE!\n\nVuoi continuare?');
+        const confirmFirst = confirm('⚠️ ATTENZIONE! Stai per eliminare TUTTI i compleanni salvati in questa app.\n\nIl tuo account rimarrà attivo per altre applicazioni, ma tutti i dati di Birthday Tracker andranno persi.\n\nVuoi continuare?');
 
         if (!confirmFirst) return;
 
-        const confirmSecond = confirm('🚨 ULTIMA CONFERMA!\n\nSei ASSOLUTAMENTE SICURO di voler eliminare il tuo account?\n\nDigita OK per confermare.');
+        const confirmSecond = confirm('🚨 ULTIMA CONFERMA!\n\nSei sicuro di voler cancellare definitivamente tutti i compleanni?');
 
         if (!confirmSecond) return;
 
         try {
-            // Get current session
-            const { data: { session } } = await supabase.auth.getSession();
-
-            if (!session) {
-                throw new Error('Nessuna sessione attiva');
-            }
-
-            // Call Edge Function to delete account
-            const { data, error } = await supabase.functions.invoke('delete-account', {
-                headers: {
-                    Authorization: `Bearer ${session.access_token}`
-                }
-            });
+            // Delete only birthdays for this app
+            const { error } = await supabase
+                .from('birthdays')
+                .delete()
+                .eq('user_id', currentUser.id)
+                .eq('app_type', 'birthday-tracker');
 
             if (error) {
                 throw error;
             }
 
-            if (!data.success) {
-                throw new Error(data.error || 'Errore durante l\'eliminazione');
-            }
-
             // Sign out after successful deletion
             await supabase.auth.signOut();
-            showToast('✅ Account eliminato completamente!', 'success');
+            showToast('✅ Dati eliminati con successo!', 'success');
+            setTimeout(() => window.location.reload(), 1500);
 
         } catch (error) {
-            console.error('Error deleting account:', error);
+            console.error('Error deleting data:', error);
             showToast('❌ Errore: ' + error.message, 'error');
         }
     });
@@ -245,7 +236,8 @@ function initializeAppListeners() {
                 person_name: name,
                 birth_date: date
             })
-            .eq('id', currentEditId);
+            .eq('id', currentEditId)
+            .eq('app_type', 'birthday-tracker');
 
         if (error) {
             showToast('Errore: ' + error.message, 'error');
@@ -268,6 +260,7 @@ async function loadBirthdays() {
         .from('birthdays')
         .select('*')
         .eq('user_id', currentUser.id)
+        .eq('app_type', 'birthday-tracker')
         .order('birth_date', { ascending: true });
 
     if (error) {
@@ -318,7 +311,8 @@ async function clearPastBirthdayGifts(birthdays) {
                     gift_idea: null,
                     budget: null
                 })
-                .eq('id', birthday.id);
+                .eq('id', birthday.id)
+                .eq('app_type', 'birthday-tracker');
 
             // Aggiorna l'oggetto locale
             birthday.gift_idea = null;
@@ -495,7 +489,8 @@ function createBirthdayCard(birthday) {
                 gift_idea: giftIdea || null,
                 budget: budgetVal
             })
-            .eq('id', birthday.id);
+            .eq('id', birthday.id)
+            .eq('app_type', 'birthday-tracker');
 
         if (error) {
             console.error('Error saving gift data:', error);
@@ -549,7 +544,8 @@ Non dimenticare di fare gli auguri!`;
             const { error } = await supabase
                 .from('birthdays')
                 .delete()
-                .eq('id', birthday.id);
+                .eq('id', birthday.id)
+                .eq('app_type', 'birthday-tracker');
 
             if (error) {
                 showToast('Errore durante l\'eliminazione', 'error');
@@ -642,7 +638,8 @@ async function deleteAllBirthdays() {
     const { error } = await supabase
         .from('birthdays')
         .delete()
-        .eq('user_id', currentUser.id);
+        .eq('user_id', currentUser.id)
+        .eq('app_type', 'birthday-tracker');
 
     if (error) {
         showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
