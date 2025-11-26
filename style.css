@@ -536,77 +536,7 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.btn-share:hover {
-    color: #4ade80;
-    background: rgba(74, 222, 128, 0.1);
-    border-color: rgba(74, 222, 128, 0.2);
-}
-
-.btn-edit:hover {
-    color: #60a5fa;
-    background: rgba(96, 165, 250, 0.1);
-    border-color: rgba(96, 165, 250, 0.2);
-}
-
-.btn-delete:hover {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.2);
-}
-
-.birthday-item.today {
-    border-left-color: #ef4444;
-    background: linear-gradient(90deg, rgba(239, 68, 68, 0.15), rgba(30, 41, 59, 0.8));
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
-}
-
-.birthday-item.today .age-number {
-    color: #ef4444;
-}
-
-.birthday-item.upcoming {
-    border-left-color: #ffd700;
-}
-
-/* ===== DELETE ALL BUTTON ===== */
-.delete-all-container {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 40px;
-}
-
-.delete-all-btn {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #ef4444;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.delete-all-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: #ef4444;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
-}
-
-/* ===== GIFT EMOJI ===== */
-.gift-emoji {
-    font-size: 1.4rem;
-    margin-left: 8px;
-    cursor: help;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: inline-block;
-}
+.btn-share:hover {}
 
 .gift-emoji:not(.visible) {
     display: none;
