@@ -40,8 +40,13 @@
                 </div>
                 <div class="input-group">
                     <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="La tua password"
-                        autocomplete="current-password">
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="La tua password"
+                            autocomplete="current-password">
+                        <button id="toggleLoginPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <button id="loginBtn" class="primary-btn">
                     <span>Accedi</span>
@@ -57,8 +62,13 @@
                 </div>
                 <div class="input-group">
                     <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Minimo 6 caratteri"
-                        autocomplete="new-password">
+                    <div class="password-wrapper">
+                        <input type="password" id="signupPassword" placeholder="Minimo 6 caratteri"
+                            autocomplete="new-password">
+                        <button id="toggleSignupPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <button id="signupBtn" class="primary-btn">
                     <span>Registrati</span>

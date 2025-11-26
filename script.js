@@ -47,6 +47,31 @@ function initializeAuthListeners() {
         document.getElementById('loginForm').style.display = 'block';
     });
 
+    // Toggle Password Visibility
+    const togglePasswordVisibility = (inputId, toggleId) => {
+        const input = document.getElementById(inputId);
+        const toggleBtn = document.getElementById(toggleId);
+
+        if (toggleBtn && input) {
+            toggleBtn.addEventListener('click', () => {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+
+                const icon = toggleBtn.querySelector('i');
+                if (type === 'password') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+    };
+
+    togglePasswordVisibility('loginPassword', 'toggleLoginPassword');
+    togglePasswordVisibility('signupPassword', 'toggleSignupPassword');
+
     // Login
     loginBtn.addEventListener('click', async () => {
         const email = document.getElementById('loginEmail').value.trim();
