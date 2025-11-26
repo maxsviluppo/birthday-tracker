@@ -431,20 +431,6 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 1.1rem;
-    width: 44px;
-    height: 44px;
-}
-
-.logout-btn:hover {
-    background: rgba(239, 68, 68, 0.2);
-    flex-direction: column;
-    gap: 12px;
-}
-
-.birthday-item {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
     background: var(--bg-card);
     backdrop-filter: blur(10px);
