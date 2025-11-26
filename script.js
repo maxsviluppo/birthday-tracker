@@ -603,7 +603,7 @@ function showAuth() {
 function showApp() {
     document.getElementById('authContainer').style.display = 'none';
     document.getElementById('appContainer').style.display = 'block';
-    document.getElementById('userEmail').textContent = currentUser.email;
+    document.getElementById('footerEmail').textContent = currentUser.email;
     loadBirthdays();
 }
 
