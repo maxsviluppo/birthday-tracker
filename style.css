@@ -329,7 +329,6 @@ body {
     margin-bottom: 5px;
 }
 
-/* FIX 3: Titolo bianco-grigio */
 .header-content h1 {
     font-size: 1.8rem;
     font-weight: 700;
@@ -340,24 +339,49 @@ body {
     background-clip: text;
 }
 
-/* FIX 4: Email verde senza bordo */
 .user-email {
     color: #22c55e;
     font-size: 0.95rem;
     margin: 0;
 }
 
-/* FIX 5: Stats più grande, grassetto, giallo */
 .stats {
     color: #ffd700;
     font-weight: 700;
     font-size: 1.1rem;
 }
 
-.logout-btn {
+.header-actions {
     position: absolute;
     top: 30px;
     right: 30px;
+    display: flex;
+    gap: 10px;
+}
+
+.delete-account-btn {
+    padding: 10px 20px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-radius: 10px;
+    color: #a855f7;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.delete-account-btn:hover {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: #a855f7;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+}
+
+.logout-btn {
     padding: 10px 20px;
     background: rgba(239, 68, 68, 0.1);
     border: 2px solid rgba(239, 68, 68, 0.3);
@@ -404,7 +428,6 @@ body {
     gap: 10px;
 }
 
-/* FIX 2: Icona azzurra */
 .add-section h2 i {
     color: #4facfe;
 }
@@ -919,6 +942,18 @@ body {
 
     .auth-card {
         padding: 40px 30px;
+    }
+
+    .header-actions {
+        position: static;
+        margin-top: 15px;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .delete-account-btn span,
+    .logout-btn span {
+        display: none;
     }
 }
 

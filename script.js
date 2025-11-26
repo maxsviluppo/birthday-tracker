@@ -163,6 +163,50 @@ function initializeAppListeners() {
         showToast('Disconnesso!', 'success');
     });
 
+    // Delete Account
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+    deleteAccountBtn.addEventListener('click', async () => {
+        const confirmFirst = confirm('⚠️ ATTENZIONE! Stai per eliminare il tuo account.\n\nQuesta azione eliminerà:\n- Il tuo account\n- Tutti i tuoi compleanni salvati\n- Tutti i dati associati\n\nQuesta operazione è IRREVERSIBILE!\n\nVuoi continuare?');
+
+        if (!confirmFirst) return;
+
+        const confirmSecond = confirm('🚨 ULTIMA CONFERMA!\n\nSei ASSOLUTAMENTE SICURO di voler eliminare il tuo account?\n\nDigita OK per confermare.');
+
+        if (!confirmSecond) return;
+
+        try {
+            // Get current session
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                throw new Error('Nessuna sessione attiva');
+            }
+
+            // Call Edge Function to delete account
+            const { data, error } = await supabase.functions.invoke('delete-account', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`
+                }
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            if (!data.success) {
+                throw new Error(data.error || 'Errore durante l\'eliminazione');
+            }
+
+            // Sign out after successful deletion
+            await supabase.auth.signOut();
+            showToast('✅ Account eliminato completamente!', 'success');
+
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            showToast('❌ Errore: ' + error.message, 'error');
+        }
+    });
+
     // Delete All Button
     const deleteAllBtn = document.getElementById('deleteAllBtn');
     if (deleteAllBtn) {
