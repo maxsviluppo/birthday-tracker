@@ -352,7 +352,7 @@ body {
     align-items: flex-start;
     background: var(--bg-card);
     backdrop-filter: blur(20px);
-    padding: 30px;
+    padding: 20px 30px 30px 30px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow-3d);
@@ -390,7 +390,7 @@ body {
 
 .header-actions {
     position: absolute;
-    top: 30px;
+    top: 15px;
     right: 30px;
     display: flex;
     gap: 10px;
@@ -928,7 +928,7 @@ body {
     box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
 }
 
-/* ===== MODAL ===== */
+/* ===== MODAL - STILE COME LOGIN CARD ===== */
 .modal {
     display: none;
     position: fixed;
@@ -942,6 +942,7 @@ body {
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s;
+    padding: 20px;
 }
 
 .modal.active {
@@ -962,12 +963,13 @@ body {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    border-radius: 30px;
     max-width: 500px;
-    width: 90%;
+    width: 100%;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
     animation: slideUp 0.3s;
     transform-style: preserve-3d;
+    padding: 40px 40px 30px 40px;
 }
 
 @keyframes slideUp {
@@ -982,45 +984,43 @@ body {
     }
 }
 
+/* Modal Header - Stile come auth-header */
 .modal-header {
-    padding: 20px 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 70px;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
 }
 
 .modal-header h3 {
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: 700;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     margin: 0;
-    background: linear-gradient(180deg, #ffffff 0%, #808080 100%);
+    background: var(--primary-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .modal-header h3 i {
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 1.3rem;
+    font-size: 1.8rem;
 }
 
 .close-btn {
-    background: none;
-    border: none;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1033,42 +1033,44 @@ body {
     transform: rotate(90deg);
 }
 
+/* Modal Body - Senza padding extra */
 .modal-body {
-    padding: 30px;
+    padding: 0;
 }
 
+/* Modal Footer - Pulsanti stile login */
 .modal-footer {
-    padding: 20px 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 25px;
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .secondary-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-light);
+    width: 100%;
     padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
+    color: var(--text-light);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
 }
 
 .secondary-btn:hover {
     background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
 
 .modal-footer .primary-btn {
-    flex: 1;
-    padding: 14px 24px;
+    margin-top: 0;
 }
 
 /* ===== FOOTER ===== */
@@ -1212,15 +1214,6 @@ body {
     .gift-input-group.budget {
         max-width: none;
     }
-
-    .modal-footer {
-        flex-direction: column;
-    }
-
-    .modal-footer .primary-btn,
-    .modal-footer .secondary-btn {
-        width: 100%;
-    }
 }
 
 /* ===== MOBILE OPTIMIZATIONS ===== */
@@ -1277,25 +1270,11 @@ body {
     }
 
     .modal-content {
-        width: 95%;
-        margin: 10px;
+        padding: 30px 20px 20px 20px;
     }
 
-    .modal-header {
-        padding: 15px 20px;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-
-    .modal-footer {
-        padding: 15px 20px;
-        flex-direction: column;
-    }
-
-    .modal-footer button {
-        width: 100%;
+    .modal-header h3 {
+        font-size: 1.6rem;
     }
 }
 
