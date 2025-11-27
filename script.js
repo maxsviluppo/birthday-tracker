@@ -340,6 +340,36 @@ function initializeAppListeners() {
     }
 
     if (saveChangePassword) {
+        // Validazione in tempo reale delle password
+        const newPasswordInput = document.getElementById('newChangePassword');
+        const confirmPasswordInput = document.getElementById('confirmNewPassword');
+        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+        const validatePasswords = () => {
+            const newPass = newPasswordInput.value;
+            const confirmPass = confirmPasswordInput.value;
+
+            if (!confirmPass) {
+                passwordMatchMessage.classList.remove('show', 'error', 'success');
+                return;
+            }
+
+            if (newPass === confirmPass) {
+                passwordMatchMessage.innerHTML = '<i class="fas fa-check-circle"></i> Le password coincidono';
+                passwordMatchMessage.classList.remove('error');
+                passwordMatchMessage.classList.add('success', 'show');
+            } else {
+                passwordMatchMessage.innerHTML = '<i class="fas fa-times-circle"></i> Le password non coincidono';
+                passwordMatchMessage.classList.remove('success');
+                passwordMatchMessage.classList.add('error', 'show');
+            }
+        };
+
+        if (newPasswordInput && confirmPasswordInput && passwordMatchMessage) {
+            newPasswordInput.addEventListener('input', validatePasswords);
+            confirmPasswordInput.addEventListener('input', validatePasswords);
+        }
+
         saveChangePassword.addEventListener('click', async () => {
             const oldPassword = document.getElementById('oldPassword').value;
             const newPassword = document.getElementById('newChangePassword').value;
