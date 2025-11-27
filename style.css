@@ -447,6 +447,89 @@ body {
 .add-section {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-3d);
+    margin-bottom: 40px;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.add-section:hover {
+    transform: translateY(-5px);
+}
+
+/* Gradient Title Utility */
+.gradient-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    background: linear-gradient(180deg, #ffffff 0%, #808080 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.date-button-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.date-button-group .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.date-button-group .primary-btn {
+    width: auto;
+    margin-top: 0;
+    height: 54px;
+    padding: 0 30px;
+}
+
+/* ===== BIRTHDAYS SECTION ===== */
+.birthdays-section {
+    margin-top: 40px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-header h2 i {
+    color: #00f2fe;
+}
+
+/* ===== BIRTHDAY LIST ITEMS ===== */
+.birthdays-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.birthday-item {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     background: var(--bg-card);
     backdrop-filter: blur(10px);
