@@ -516,44 +516,72 @@ body {
     transform: translateY(-2px) scale(1.02);
 }
 
-/* Date Input with Calendar Icon */
+/* Date Input with Calendar Icon - Underline Style */
 .date-input-wrapper {
     position: relative;
     width: 100%;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-end;
+    /* Align to bottom for the underline effect */
+    gap: 15px;
 }
 
 .date-input-wrapper input[type="date"] {
     flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    padding: 10px 5px;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.date-input-wrapper input[type="date"]:focus {
+    outline: none;
+    border-bottom-color: #ff6b9d;
+    box-shadow: 0 10px 20px -10px rgba(255, 107, 157, 0.3);
+    transform: none;
+}
+
+/* Custom placeholder color for date input */
+.date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    /* Hide default icon since we have a custom one */
 }
 
 .calendar-icon-btn {
-    background: rgba(255, 107, 157, 0.1);
-    border: 2px solid rgba(255, 107, 157, 0.3);
-    border-radius: 10px;
+    background: transparent;
+    border: none;
     color: #ff6b9d;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     flex-shrink: 0;
+    padding: 0;
+    margin-bottom: 5px;
+    /* Align with the text on the line */
+    filter: drop-shadow(0 0 5px rgba(255, 107, 157, 0.3));
 }
 
 .calendar-icon-btn:hover {
-    background: rgba(255, 107, 157, 0.2);
-    border-color: #ff6b9d;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+    background: transparent;
+    transform: scale(1.2) rotate(10deg);
+    color: #c471ed;
+    filter: drop-shadow(0 0 10px rgba(196, 113, 237, 0.6));
+    box-shadow: none;
 }
 
 .calendar-icon-btn:active {
-    transform: translateY(0) scale(1);
+    transform: scale(0.95);
 }
 
 /* ===== BIRTHDAYS SECTION ===== */
