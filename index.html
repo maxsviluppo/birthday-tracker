@@ -111,19 +111,58 @@
                 </div>
             </div>
 
-            <p class="promo-text">
-                <i class="fas fa-lightbulb"></i>
-                Hai bisogno di un'app personalizzata?
-            </p>
-            <a href="mailto:castromassimo@gmail.com" class="promo-contact" title="Contattami">
-                <i class="fas fa-envelope"></i>
-                <span>Contattami</span>
-            </a>
+            <!-- Data + Pulsante -->
+            <div class="date-button-group">
+                <div class="input-group">
+                    <label for="birthDate">Data di Nascita</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <button id="addBtn" class="primary-btn">
+                    <i class="fas fa-gift"></i>
+                    <span>Aggiungi Compleanno</span>
+                </button>
+            </div>
         </div>
 
-        <div class="footer-credits">
-            <p>Made with <i class="fas fa-heart"></i> by DevTools</p>
+        <!-- Birthdays List -->
+        <div class="birthdays-section">
+            <div class="section-header">
+                <h2><i class="fas fa-calendar-alt"></i> I Tuoi Compleanni</h2>
+            </div>
+            <div id="birthdaysList" class="birthdays-grid">
+                <!-- Birthday cards will be injected here -->
+            </div>
+
+            <!-- Delete All Button -->
+            <div class="delete-all-container">
+                <button id="deleteAllBtn" class="delete-all-btn">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Cancella tutti i compleanni</span>
+                </button>
+            </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-user">
+                <i class="fas fa-user-circle"></i>
+                <span id="footerEmail" class="footer-email"></span>
+            </div>
+
+            <div class="footer-promo">
+                <p class="promo-text">
+                    <i class="fas fa-lightbulb"></i>
+                    Hai bisogno di un'app personalizzata?
+                </p>
+                <a href="mailto:castromassimo@gmail.com" class="promo-contact" title="Contattami">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contattami</span>
+                </a>
+            </div>
+
+            <div class="footer-credits">
+                <p>Made with <i class="fas fa-heart"></i> by DevTools</p>
+            </div>
         </footer>
     </div>
 
