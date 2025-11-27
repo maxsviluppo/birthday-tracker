@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             showAuth();
+            // REFRESH PAGE ON LOGOUT as requested
+            window.location.reload();
         } else if (event === 'PASSWORD_RECOVERY') {
             // User clicked the reset link in email
             showUpdatePasswordForm();
@@ -126,7 +128,7 @@ function initializeAuthListeners() {
         }
     });
 
-    // Toggle Password Visibility
+    // Toggle Password Visibility Helper
     const togglePasswordVisibility = (inputId, toggleId) => {
         const input = document.getElementById(inputId);
         const toggleBtn = document.getElementById(toggleId);
@@ -148,9 +150,15 @@ function initializeAuthListeners() {
         }
     };
 
+    // Initialize toggles
     togglePasswordVisibility('loginPassword', 'toggleLoginPassword');
     togglePasswordVisibility('signupPassword', 'toggleSignupPassword');
     togglePasswordVisibility('newPassword', 'toggleNewPassword');
+
+    // Change Password Modal Toggles
+    togglePasswordVisibility('oldPassword', 'toggleOldPassword');
+    togglePasswordVisibility('newChangePassword', 'toggleNewChangePassword');
+    togglePasswordVisibility('confirmNewPassword', 'toggleConfirmNewPassword');
 
     // Calendar Icon - Trigger Date Picker
     const calendarBtn = document.getElementById('calendarBtn');
@@ -188,6 +196,7 @@ function initializeAuthListeners() {
             loginBtn.innerHTML = '<span>Accedi</span><i class="fas fa-arrow-right"></i>';
         } else {
             showToast('Accesso effettuato!', 'success');
+            // Page reload happens automatically via onAuthStateChange -> showApp or manual reload if preferred
         }
     });
 
@@ -218,10 +227,8 @@ function initializeAuthListeners() {
         } else {
             showToast('Registrazione completata! Accedi ora.', 'success');
             setTimeout(() => {
-                hideAllForms();
-                document.getElementById('loginForm').style.display = 'block';
-                signupBtn.disabled = false;
-                signupBtn.innerHTML = '<span>Registrati</span><i class="fas fa-user-plus"></i>';
+                // REFRESH PAGE AFTER SIGNUP as requested
+                window.location.reload();
             }, 1500);
         }
     });
@@ -249,6 +256,13 @@ function initializeAppListeners() {
     const closeModal = document.getElementById('closeModal');
     const cancelEdit = document.getElementById('cancelEdit');
     const saveEdit = document.getElementById('saveEdit');
+
+    // Change Password Modal Elements
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const closeChangePasswordModal = document.getElementById('closeChangePasswordModal');
+    const cancelChangePassword = document.getElementById('cancelChangePassword');
+    const saveChangePassword = document.getElementById('saveChangePassword');
 
     // Add Birthday
     addBtn.addEventListener('click', async () => {
@@ -296,7 +310,7 @@ function initializeAppListeners() {
     // Logout
     logoutBtn.addEventListener('click', async () => {
         await supabase.auth.signOut();
-        showToast('Disconnesso!', 'success');
+        // Reload handled in onAuthStateChange
     });
 
     // Delete Account
@@ -325,7 +339,7 @@ function initializeAppListeners() {
             // Sign out after successful deletion
             await supabase.auth.signOut();
             showToast('✅ Dati eliminati con successo!', 'success');
-            setTimeout(() => window.location.reload(), 1500);
+            // Reload handled in onAuthStateChange
 
         } catch (error) {
             console.error('Error deleting data:', error);
@@ -343,7 +357,7 @@ function initializeAppListeners() {
         });
     }
 
-    // Modal controls
+    // Modal controls (Edit Birthday)
     closeModal.addEventListener('click', () => {
         document.getElementById('editModal').classList.remove('active');
     });
@@ -385,6 +399,89 @@ function initializeAppListeners() {
         saveEdit.disabled = false;
         saveEdit.innerHTML = '<i class="fas fa-save"></i><span>Salva Modifiche</span>';
     });
+
+    // ===== CHANGE PASSWORD MODAL LOGIC =====
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', () => {
+            // Clear fields
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newChangePassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+            changePasswordModal.classList.add('active');
+        });
+    }
+
+    if (closeChangePasswordModal) {
+        closeChangePasswordModal.addEventListener('click', () => {
+            changePasswordModal.classList.remove('active');
+        });
+    }
+
+    if (cancelChangePassword) {
+        cancelChangePassword.addEventListener('click', () => {
+            changePasswordModal.classList.remove('active');
+        });
+    }
+
+    if (saveChangePassword) {
+        saveChangePassword.addEventListener('click', async () => {
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newChangePassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                showToast('Compila tutti i campi!', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showToast('La nuova password deve essere di almeno 6 caratteri!', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showToast('Le nuove password non coincidono!', 'error');
+                return;
+            }
+
+            saveChangePassword.disabled = true;
+            saveChangePassword.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifica...';
+
+            // 1. Verify old password by trying to sign in
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email: currentUser.email,
+                password: oldPassword
+            });
+
+            if (signInError) {
+                showToast('La vecchia password non è corretta!', 'error');
+                saveChangePassword.disabled = false;
+                saveChangePassword.innerHTML = '<i class="fas fa-save"></i><span>Modifica e Conferma</span>';
+                return;
+            }
+
+            // 2. Update password
+            saveChangePassword.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aggiornamento...';
+            const { error: updateError } = await supabase.auth.updateUser({
+                password: newPassword
+            });
+
+            if (updateError) {
+                showToast('Errore aggiornamento: ' + updateError.message, 'error');
+                saveChangePassword.disabled = false;
+                saveChangePassword.innerHTML = '<i class="fas fa-save"></i><span>Modifica e Conferma</span>';
+            } else {
+                showToast('Password modificata con successo! Effettua nuovamente l\'accesso.', 'success');
+                changePasswordModal.classList.remove('active');
+
+                // 3. Sign out and reload
+                setTimeout(async () => {
+                    await supabase.auth.signOut();
+                    // Reload handled by onAuthStateChange
+                }, 2000);
+            }
+        });
+    }
 }
 
 // ===== DATA MANAGEMENT =====
