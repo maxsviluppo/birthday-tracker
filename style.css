@@ -516,6 +516,46 @@ body {
     transform: translateY(-2px) scale(1.02);
 }
 
+/* Date Input with Calendar Icon */
+.date-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-input-wrapper input[type="date"] {
+    flex: 1;
+}
+
+.calendar-icon-btn {
+    background: rgba(255, 107, 157, 0.1);
+    border: 2px solid rgba(255, 107, 157, 0.3);
+    border-radius: 10px;
+    color: #ff6b9d;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.calendar-icon-btn:hover {
+    background: rgba(255, 107, 157, 0.2);
+    border-color: #ff6b9d;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+}
+
+.calendar-icon-btn:active {
+    transform: translateY(0) scale(1);
+}
+
 /* ===== BIRTHDAYS SECTION ===== */
 .birthdays-section {
     margin-top: 40px;

@@ -72,6 +72,21 @@ function initializeAuthListeners() {
     togglePasswordVisibility('loginPassword', 'toggleLoginPassword');
     togglePasswordVisibility('signupPassword', 'toggleSignupPassword');
 
+    // Calendar Icon - Trigger Date Picker
+    const calendarBtn = document.getElementById('calendarBtn');
+    if (calendarBtn) {
+        calendarBtn.addEventListener('click', () => {
+            const birthDateInput = document.getElementById('birthDate');
+            if (birthDateInput) {
+                if ('showPicker' in HTMLInputElement.prototype) {
+                    birthDateInput.showPicker();
+                } else {
+                    birthDateInput.click();
+                }
+            }
+        });
+    }
+
     // Login
     loginBtn.addEventListener('click', async () => {
         const email = document.getElementById('loginEmail').value.trim();
@@ -277,9 +292,12 @@ function initializeAppListeners() {
     });
 }
 
+// ===== DATA MANAGEMENT =====
 async function loadBirthdays() {
-    const birthdaysList = document.getElementById('birthdaysList');
+    const list = document.getElementById('birthdaysList');
     const totalCount = document.getElementById('totalCount');
+
+    list.innerHTML = '<div style="text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #ff6b9d;"></i></div>';
 
     const { data: birthdays, error } = await supabase
         .from('birthdays')
@@ -289,377 +307,148 @@ async function loadBirthdays() {
         .order('birth_date', { ascending: true });
 
     if (error) {
-        showToast('Errore nel caricamento', 'error');
+        showToast('Errore caricamento: ' + error.message, 'error');
         return;
     }
 
-    birthdaysList.innerHTML = '';
+    list.innerHTML = '';
 
     if (birthdays.length === 0) {
-        birthdaysList.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-birthday-cake"></i>
-                <p>Nessun compleanno salvato. Aggiungi il primo!</p>
+        list.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                <i class="fas fa-birthday-cake" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p>Nessun compleanno salvato.</p>
+                <p style="font-size: 0.9rem;">Aggiungine uno per iniziare!</p>
             </div>
         `;
         totalCount.textContent = '0 compleanni';
         return;
     }
 
-    // Cancella regalo e budget per compleanni passati
-    await clearPastBirthdayGifts(birthdays);
+    totalCount.textContent = `${birthdays.length} compleanni`;
 
-    // Sort by upcoming birthdays
-    const sortedBirthdays = sortByUpcoming(birthdays);
-    totalCount.textContent = `${birthdays.length} ${birthdays.length === 1 ? 'compleanno' : 'compleanni'}`;
+    // Process and sort birthdays by next occurrence
+    const processedBirthdays = birthdays.map(birthday => {
+        const birthDate = new Date(birthday.birth_date);
+        const today = new Date();
 
-    sortedBirthdays.forEach(birthday => {
-        const card = createBirthdayCard(birthday);
-        birthdaysList.appendChild(card);
-    });
-}
+        let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
 
-// Cancella regalo e budget per compleanni passati (giorni negativi)
-async function clearPastBirthdayGifts(birthdays) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    for (const birthday of birthdays) {
-        const daysUntil = getDaysUntilBirthday(birthday.birth_date);
-
-        // Se il compleanno è passato (giorni negativi o 365 = anno scorso)
-        // e ci sono dati regalo da cancellare
-        if (daysUntil > 300 && (birthday.gift_idea || birthday.budget)) {
-            await supabase
-                .from('birthdays')
-                .update({
-                    gift_idea: null,
-                    budget: null
-                })
-                .eq('id', birthday.id)
-                .eq('app_type', 'birthday-tracker');
-
-            // Aggiorna l'oggetto locale
-            birthday.gift_idea = null;
-            birthday.budget = null;
+        if (nextBirthday < today && nextBirthday.toDateString() !== today.toDateString()) {
+            nextBirthday.setFullYear(today.getFullYear() + 1);
         }
-    }
-}
 
-function sortByUpcoming(birthdays) {
-    return birthdays.sort((a, b) => {
-        const daysA = getDaysUntilBirthday(a.birth_date);
-        const daysB = getDaysUntilBirthday(b.birth_date);
-        return daysA - daysB;
-    });
-}
+        const diffTime = nextBirthday - today;
+        const daysUntil = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-// ===== CURRENCY HELPERS =====
-const formatCurrency = (value) => {
-    if (value === null || value === undefined || value === '') return '';
-    return new Intl.NumberFormat('it-IT', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(value);
-};
+        const age = nextBirthday.getFullYear() - birthDate.getFullYear();
 
-const parseCurrency = (str) => {
-    if (!str) return null;
-    const cleanStr = str.replace(/\./g, '').replace(',', '.');
-    const floatVal = parseFloat(cleanStr);
-    return isNaN(floatVal) ? null : floatVal;
-};
+        return {
+            ...birthday,
+            daysUntil,
+            age,
+            nextBirthday
+        };
+    }).sort((a, b) => a.daysUntil - b.daysUntil);
 
-function createBirthdayCard(birthday) {
-    const card = document.createElement('div');
-    card.className = 'birthday-item';
+    processedBirthdays.forEach(birthday => {
+        const isToday = birthday.daysUntil === 0;
+        const isUpcoming = birthday.daysUntil > 0 && birthday.daysUntil <= 7;
 
-    const birthDate = new Date(birthday.birth_date);
-    const currentAge = calculateAge(birthday.birth_date);
-    const nextAge = currentAge + 1;
-    const daysUntil = getDaysUntilBirthday(birthday.birth_date);
+        const item = document.createElement('div');
+        item.className = `birthday-item ${isToday ? 'today' : ''} ${isUpcoming ? 'upcoming' : ''}`;
 
-    // Add special classes
-    if (daysUntil === 0) {
-        card.classList.add('today');
-    } else if (daysUntil <= 7) {
-        card.classList.add('upcoming');
-    }
+        // Format date
+        const dateOptions = { day: 'numeric', month: 'long' };
+        const formattedDate = new Date(birthday.birth_date).toLocaleDateString('it-IT', dateOptions);
 
-    const formattedDate = birthDate.toLocaleDateString('it-IT', {
-        day: 'numeric',
-        month: 'long'
-    });
+        let daysText = '';
+        if (isToday) {
+            daysText = '<span class="days-text today">OGGI! 🎉</span>';
+        } else if (birthday.daysUntil === 1) {
+            daysText = '<span class="days-text">Domani!</span>';
+        } else {
+            daysText = `<span class="days-text">tra ${birthday.daysUntil} giorni</span>`;
+        }
 
-    // Capitalize first letter of each word
-    const formatName = (name) => {
-        return name.toLowerCase().split(' ').map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-    };
-
-    // Format days badge text
-    let daysText;
-    let daysClass = 'days-text';
-
-    if (daysUntil === 0) {
-        daysText = 'OGGI! 🎉';
-        daysClass += ' today';
-    } else if (daysUntil === 1) {
-        daysText = '- Domani!';
-    } else {
-        daysText = `- tra ${daysUntil} gg`;
-    }
-
-    // Helper for safe value
-    const safeValue = (val) => val ? escapeHtml(val) : '';
-
-    // HTML Icona Regalo (Emoji) - Visibile se c'è regalo O budget
-    const hasGiftData = birthday.gift_idea || birthday.budget;
-    const giftIconHtml = `<span class="gift-emoji ${hasGiftData ? 'visible' : ''}">🎁</span>`;
-
-    card.innerHTML = `
-        <div class="item-info">
-            <div class="item-name">
-                ${escapeHtml(formatName(birthday.person_name))}
-                ${giftIconHtml}
+        item.innerHTML = `
+            <div class="item-info" onclick="toggleGiftSection('${birthday.id}')">
+                <div class="item-name">
+                    ${birthday.person_name}
+                    <i class="fas fa-gift gift-emoji ${birthday.gift_idea ? 'visible' : ''}" title="Idea regalo salvata"></i>
+                </div>
+                <div class="item-details">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>${formattedDate}</span>
+                    • ${daysText}
+                </div>
+                
+                <!-- Gift Section (Hidden by default) -->
+                <div id="gift-section-${birthday.id}" class="gift-section" onclick="event.stopPropagation()">
+                    <div class="gift-container">
+                        <div class="gift-input-group main">
+                            <label class="gift-label"><i class="fas fa-gift"></i> Idea Regalo</label>
+                            <input type="text" 
+                                class="gift-input" 
+                                id="gift-idea-${birthday.id}" 
+                                placeholder="Cosa regalare?" 
+                                value="${birthday.gift_idea || ''}"
+                                onchange="saveGiftIdea('${birthday.id}')">
+                        </div>
+                        <div class="gift-input-group budget">
+                            <label class="gift-label"><i class="fas fa-euro-sign"></i> Budget</label>
+                            <input type="number" 
+                                class="gift-input" 
+                                id="gift-budget-${birthday.id}" 
+                                placeholder="0.00" 
+                                value="${birthday.gift_budget || ''}"
+                                onchange="saveGiftIdea('${birthday.id}')">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="item-details">
-                <span>${formattedDate}</span>
-                <span class="${daysClass}">${daysText}</span>
+            
+            <div class="item-right">
+                <div class="age-label">Compie</div>
+                <div class="age-number">${birthday.age}</div>
+                <div class="age-label">Anni</div>
             </div>
-        </div>
-        
-        <div class="item-right">
-            <div class="age-number">${nextAge}</div>
-            <div class="age-label">anni</div>
+
             <div class="item-actions">
-                <button class="action-btn share-btn" title="Condividi">
+                <button class="action-btn btn-share" onclick="shareBirthday('${birthday.person_name}', ${birthday.age}, '${formattedDate}')" title="Condividi">
                     <i class="fas fa-share-alt"></i>
                 </button>
-                <button class="action-btn edit-btn" title="Modifica">
-                    <i class="fas fa-pen"></i>
+                <button class="action-btn btn-edit" onclick="editBirthday('${birthday.id}', '${birthday.person_name}', '${birthday.birth_date}')" title="Modifica">
+                    <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn delete-btn" title="Elimina">
+                <button class="action-btn btn-delete" onclick="deleteBirthday('${birthday.id}')" title="Elimina">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
-        </div>
+        `;
 
-        <!-- Hidden Gift Section -->
-        <div class="gift-section">
-            <div class="gift-container">
-                <div class="gift-input-group main">
-                    <label class="gift-label"><i class="fas fa-gift"></i> Idea Regalo</label>
-                    <input type="text" class="gift-input gift-idea" placeholder="Cosa vorrebbe ricevere?" value="${safeValue(birthday.gift_idea)}">
-                </div>
-                <div class="gift-input-group budget">
-                    <label class="gift-label"><i class="fas fa-euro-sign"></i> Budget</label>
-                    <input type="text" class="gift-input gift-budget" placeholder="0,00" value="${formatCurrency(birthday.budget)}">
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Toggle Expansion Logic
-    card.addEventListener('click', (e) => {
-        if (e.target.closest('.item-actions') || e.target.closest('.gift-input')) return;
-
-        document.querySelectorAll('.birthday-item.expanded').forEach(item => {
-            if (item !== card) item.classList.remove('expanded');
-        });
-
-        card.classList.toggle('expanded');
+        list.appendChild(item);
     });
-
-    // Auto-save Logic for Gift & Budget
-    const giftInput = card.querySelector('.gift-idea');
-    const budgetInput = card.querySelector('.gift-budget');
-    const giftEmoji = card.querySelector('.gift-emoji');
-
-    // Budget Input Formatting Logic
-    budgetInput.addEventListener('focus', () => {
-        const val = parseCurrency(budgetInput.value);
-        if (val !== null) {
-            budgetInput.value = val.toString().replace('.', ',');
-        } else {
-            budgetInput.value = '';
-        }
-        budgetInput.select();
-    });
-
-    // Save on Blur
-    const saveGiftData = async () => {
-        const giftIdea = giftInput.value.trim();
-
-        let budgetVal = null;
-        if (budgetInput.value.trim() !== '') {
-            let rawVal = budgetInput.value.replace(/\./g, '').replace(',', '.');
-            budgetVal = parseFloat(rawVal);
-            if (isNaN(budgetVal)) budgetVal = null;
-        }
-
-        budgetInput.value = formatCurrency(budgetVal);
-
-        // Update Icon Visibility - Mostra se c'è regalo O budget
-        if (giftIdea || budgetVal) {
-            giftEmoji.classList.add('visible');
-        } else {
-            giftEmoji.classList.remove('visible');
-        }
-
-        const { error } = await supabase
-            .from('birthdays')
-            .update({
-                gift_idea: giftIdea || null,
-                budget: budgetVal
-            })
-            .eq('id', birthday.id)
-            .eq('app_type', 'birthday-tracker');
-
-        if (error) {
-            console.error('Error saving gift data:', error);
-            showToast('Errore nel salvataggio dati', 'error');
-        }
-    };
-
-    giftInput.addEventListener('blur', saveGiftData);
-    budgetInput.addEventListener('blur', saveGiftData);
-
-    giftInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') giftInput.blur(); });
-    budgetInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') budgetInput.blur(); });
-
-    // Share button
-    const shareBtn = card.querySelector('.share-btn');
-    shareBtn.addEventListener('click', async () => {
-        const shareText = `🎂 Compleanno di ${formatName(birthday.person_name)}
-📅 Data: ${formattedDate}
-🎉 Compie: ${nextAge} anni!
-        
-Non dimenticare di fare gli auguri!`;
-
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Promemoria Compleanno',
-                    text: shareText,
-                });
-            } catch (err) {
-                console.log('Error sharing:', err);
-            }
-        } else {
-            copyToClipboard(shareText);
-            showToast('Testo copiato negli appunti!', 'success');
-        }
-    });
-
-    // Edit button
-    const editBtn = card.querySelector('.edit-btn');
-    editBtn.addEventListener('click', () => {
-        currentEditId = birthday.id;
-        document.getElementById('editPersonName').value = birthday.person_name;
-        document.getElementById('editBirthDate').value = birthday.birth_date;
-        document.getElementById('editModal').classList.add('active');
-    });
-
-    // Delete button
-    const deleteBtn = card.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', async () => {
-        if (confirm(`Sei sicuro di voler eliminare il compleanno di ${birthday.person_name}?`)) {
-            const { error } = await supabase
-                .from('birthdays')
-                .delete()
-                .eq('id', birthday.id)
-                .eq('app_type', 'birthday-tracker');
-
-            if (error) {
-                showToast('Errore durante l\'eliminazione', 'error');
-            } else {
-                showToast('Compleanno eliminato!', 'success');
-                loadBirthdays();
-            }
-        }
-    });
-
-    return card;
 }
 
-// ===== UTILITY FUNCTIONS =====
-function calculateAge(birthDate) {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
+async function deleteBirthday(id) {
+    if (!confirm('Sei sicuro di voler eliminare questo compleanno?')) return;
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
+    const { error } = await supabase
+        .from('birthdays')
+        .delete()
+        .eq('id', id)
+        .eq('app_type', 'birthday-tracker');
+
+    if (error) {
+        showToast('Errore: ' + error.message, 'error');
+    } else {
+        showToast('Eliminato!', 'success');
+        loadBirthdays();
     }
-
-    return age;
-}
-
-function getDaysUntilBirthday(birthDate) {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const thisYearBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
-    thisYearBirthday.setHours(0, 0, 0, 0);
-
-    if (thisYearBirthday < today) {
-        thisYearBirthday.setFullYear(today.getFullYear() + 1);
-    }
-
-    const diffTime = thisYearBirthday - today;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    return diffDays;
-}
-
-function showAuth() {
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('appContainer').style.display = 'none';
-}
-
-function showApp() {
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('appContainer').style.display = 'block';
-    document.getElementById('footerEmail').textContent = currentUser.email;
-    loadBirthdays();
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function showToast(message, type) {
-    const existingToast = document.querySelector('.toast');
-    if (existingToast) existingToast.remove();
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-
-    const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-
-    toast.innerHTML = `${icon} <span>${message}</span>`;
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('show'), 10);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
 }
 
 async function deleteAllBirthdays() {
-    if (!currentUser) {
-        showToast('Errore: utente non autenticato', 'error');
-        return;
-    }
-
     const { error } = await supabase
         .from('birthdays')
         .delete()
@@ -667,33 +456,129 @@ async function deleteAllBirthdays() {
         .eq('app_type', 'birthday-tracker');
 
     if (error) {
-        showToast('Errore durante l\'eliminazione: ' + error.message, 'error');
+        showToast('Errore: ' + error.message, 'error');
     } else {
-        showToast('Tutti i compleanni sono stati eliminati!', 'success');
+        showToast('Tutti i compleanni eliminati!', 'success');
         loadBirthdays();
     }
 }
 
-function copyToClipboard(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-            showToast('Dati copiati negli appunti!', 'success');
-        }).catch(() => {
-            showToast('Impossibile copiare i dati', 'error');
+function editBirthday(id, name, date) {
+    currentEditId = id;
+    document.getElementById('editPersonName').value = name;
+    document.getElementById('editBirthDate').value = date;
+    document.getElementById('editModal').classList.add('active');
+}
+
+function shareBirthday(name, age, date) {
+    const text = `🎂 Non dimenticare! ${name} compie ${age} anni il ${date}. Salvato su Birthday Tracker!`;
+    if (navigator.share) {
+        navigator.share({
+            title: 'Compleanno in arrivo!',
+            text: text,
+            url: window.location.href
         });
     } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showToast('Dati copiati negli appunti!', 'success');
-        } catch (err) {
-            showToast('Impossibile copiare i dati', 'error');
-        }
-        document.body.removeChild(textArea);
+        navigator.clipboard.writeText(text);
+        showToast('Testo copiato negli appunti!', 'success');
     }
 }
+
+// ===== GIFT FUNCTIONALITY =====
+function toggleGiftSection(id) {
+    const item = document.getElementById(`gift-section-${id}`).closest('.birthday-item');
+    item.classList.toggle('expanded');
+}
+
+async function saveGiftIdea(id) {
+    const idea = document.getElementById(`gift-idea-${id}`).value;
+    const budget = document.getElementById(`gift-budget-${id}`).value;
+
+    // Update UI immediately (optimistic update)
+    const item = document.getElementById(`gift-section-${id}`).closest('.birthday-item');
+    const emoji = item.querySelector('.gift-emoji');
+
+    if (idea || budget) {
+        emoji.classList.add('visible');
+    } else {
+        emoji.classList.remove('visible');
+    }
+
+    const { error } = await supabase
+        .from('birthdays')
+        .update({
+            gift_idea: idea,
+            gift_budget: budget ? parseFloat(budget) : null
+        })
+        .eq('id', id)
+        .eq('app_type', 'birthday-tracker');
+
+    if (error) {
+        showToast('Errore salvataggio regalo', 'error');
+    } else {
+        // Optional: show a small success indicator
+    }
+}
+
+// ===== UI HELPERS =====
+function showApp() {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'block';
+    document.getElementById('footerEmail').textContent = currentUser.email;
+    loadBirthdays();
+}
+
+function showAuth() {
+    document.getElementById('appContainer').style.display = 'none';
+    document.getElementById('authContainer').style.display = 'flex';
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '10px';
+    toast.style.color = 'white';
+    toast.style.fontWeight = '600';
+    toast.style.zIndex = '10000';
+    toast.style.animation = 'slideIn 0.3s, fadeOut 0.3s 2.7s';
+    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+    toast.style.backdropFilter = 'blur(10px)';
+
+    if (type === 'error') {
+        toast.style.background = 'rgba(239, 68, 68, 0.9)';
+        toast.style.border = '1px solid rgba(239, 68, 68, 0.5)';
+        toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    } else if (type === 'success') {
+        toast.style.background = 'rgba(34, 197, 94, 0.9)';
+        toast.style.border = '1px solid rgba(34, 197, 94, 0.5)';
+        toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    } else {
+        toast.style.background = 'rgba(59, 130, 246, 0.9)';
+        toast.style.border = '1px solid rgba(59, 130, 246, 0.5)';
+        toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+    }
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Add CSS for toast animation
+const style = document.createElement('style');
+style.innerHTML = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
