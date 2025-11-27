@@ -155,7 +155,6 @@ body {
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
     position: relative;
-    /* For absolute positioning of refresh button */
 }
 
 .auth-card:hover {
@@ -486,7 +485,6 @@ body {
     transform: translateY(-5px);
 }
 
-/* Gradient Title Utility */
 .gradient-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -542,13 +540,11 @@ body {
     transform: translateY(-2px) scale(1.02);
 }
 
-/* Date Input with Calendar Icon - Underline Style */
 .date-input-wrapper {
     position: relative;
     width: 100%;
     display: flex;
     align-items: flex-end;
-    /* Align to bottom for the underline effect */
     gap: 15px;
 }
 
@@ -573,10 +569,8 @@ body {
     transform: none;
 }
 
-/* Custom placeholder color for date input */
 .date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
-    /* Hide default icon since we have a custom one */
 }
 
 .calendar-icon-btn {
@@ -594,7 +588,6 @@ body {
     flex-shrink: 0;
     padding: 0;
     margin-bottom: 5px;
-    /* Align with the text on the line */
     filter: drop-shadow(0 0 5px rgba(255, 107, 157, 0.3));
 }
 
@@ -615,7 +608,6 @@ body {
     margin-top: 40px;
 }
 
-/* Separator Styles */
 .section-separator {
     display: flex;
     align-items: center;
@@ -991,18 +983,33 @@ body {
 }
 
 .modal-header {
-    padding: 25px 30px;
+    padding: 20px 30px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 70px;
 }
 
 .modal-header h3 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    margin: 0;
+    background: linear-gradient(180deg, #ffffff 0%, #808080 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-header h3 i {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.3rem;
 }
 
 .close-btn {
@@ -1013,7 +1020,7 @@ body {
     cursor: pointer;
     transition: all 0.3s;
     width: 40px;
-    height: 44px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1034,7 +1041,7 @@ body {
     padding: 20px 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 15px;
 }
 
@@ -1042,16 +1049,26 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-light);
-    padding: 12px 24px;
+    padding: 14px 24px;
     border-radius: 12px;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .secondary-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
+}
+
+.modal-footer .primary-btn {
+    flex: 1;
+    padding: 14px 24px;
 }
 
 /* ===== FOOTER ===== */
@@ -1195,12 +1212,19 @@ body {
     .gift-input-group.budget {
         max-width: none;
     }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer .primary-btn,
+    .modal-footer .secondary-btn {
+        width: 100%;
+    }
 }
 
 /* ===== MOBILE OPTIMIZATIONS ===== */
 @media (max-width: 480px) {
-
-    /* Auth Card adjustments */
     .auth-card {
         padding: 30px 20px;
         margin: 10px;
@@ -1215,16 +1239,13 @@ body {
         font-size: 50px;
     }
 
-    /* Header Actions adjustments */
     .header-content {
         padding: 20px;
         padding-top: 70px;
-        /* Space for absolute positioned buttons */
     }
 
     .header-actions {
         position: absolute;
-        /* Force absolute on mobile too for this design */
         top: 15px;
         right: 15px;
         margin-top: 0;
@@ -1241,7 +1262,6 @@ body {
         font-size: 1rem;
     }
 
-    /* Form adjustments */
     .date-button-group {
         flex-direction: column;
         gap: 15px;
@@ -1256,7 +1276,6 @@ body {
         height: 50px;
     }
 
-    /* Modal adjustments */
     .modal-content {
         width: 95%;
         margin: 10px;
@@ -1272,8 +1291,7 @@ body {
 
     .modal-footer {
         padding: 15px 20px;
-        flex-direction: column-reverse;
-        /* Stack buttons on mobile */
+        flex-direction: column;
     }
 
     .modal-footer button {
