@@ -154,6 +154,8 @@ body {
     box-shadow: var(--shadow-3d);
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
+    position: relative;
+    /* For absolute positioning of refresh button */
 }
 
 .auth-card:hover {
@@ -1269,232 +1271,40 @@ body {
     }
 
     .modal-footer {
-        .footer-promo {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
+        padding: 15px 20px;
+        flex-direction: column-reverse;
+        /* Stack buttons on mobile */
+    }
 
-        .promo-text {
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .modal-footer button {
+        width: 100%;
+    }
+}
 
-        .promo-text i {
-            color: #ffd700;
-        }
+/* ===== REFRESH APP BUTTON ===== */
+.refresh-app-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-muted);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
 
-        .promo-contact {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #ff6b9d;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 12px;
-            background: rgba(255, 107, 157, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .promo-contact:hover {
-            background: rgba(255, 107, 157, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
-        }
-
-        .footer-credits {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .footer-credits i {
-            color: #ff6b9d;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        @keyframes heartbeat {
-            0% {
-                transform: scale(1);
-            }
-
-            15% {
-                transform: scale(1.3);
-            }
-
-            30% {
-                transform: scale(1);
-            }
-
-            45% {
-                transform: scale(1.3);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .header-content {
-                align-items: center;
-                text-align: center;
-            }
-
-            .header-actions {
-                position: static;
-                margin-top: 20px;
-                justify-content: center;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .date-button-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .primary-btn {
-                width: 100%;
-            }
-
-            .birthday-item {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-
-            .item-right {
-                margin-left: 0;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                border-top: 1px solid rgba(255, 255, 255, 0.05);
-                padding-top: 15px;
-            }
-
-            .gift-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .gift-input-group.budget {
-                max-width: none;
-            }
-        }
-
-        /* ===== MOBILE OPTIMIZATIONS ===== */
-        @media (max-width: 480px) {
-
-            /* Auth Card adjustments */
-            .auth-card {
-                padding: 30px 20px;
-                margin: 10px;
-                width: 100%;
-            }
-
-            .auth-header h1 {
-                font-size: 2rem;
-            }
-
-            .auth-header i {
-                font-size: 50px;
-            }
-
-            /* Header Actions adjustments */
-            .header-content {
-                padding: 20px;
-                padding-top: 70px;
-                /* Space for absolute positioned buttons */
-            }
-
-            .header-actions {
-                position: absolute;
-                /* Force absolute on mobile too for this design */
-                top: 15px;
-                right: 15px;
-                margin-top: 0;
-                justify-content: flex-end;
-                gap: 8px;
-            }
-
-            .action-header-btn,
-            .delete-account-btn,
-            .logout-btn {
-                width: 38px;
-                height: 38px;
-                padding: 8px;
-                font-size: 1rem;
-            }
-
-            /* Form adjustments */
-            .date-button-group {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .date-button-group .input-group {
-                width: 100%;
-            }
-
-            .date-button-group .primary-btn {
-                width: 100%;
-                height: 50px;
-            }
-
-            /* Modal adjustments */
-            .modal-content {
-                width: 95%;
-                margin: 10px;
-            }
-
-            .modal-header {
-                padding: 15px 20px;
-            }
-
-            .modal-body {
-                padding: 20px;
-            }
-
-            .modal-footer {
-                padding: 15px 20px;
-                flex-direction: column-reverse;
-                /* Stack buttons on mobile */
-            }
-
-            .modal-footer button {
-                width: 100%;
-            }
-        }
-
-        /* ===== REFRESH APP BUTTON ===== */
-        .refresh-app-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-muted);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .refresh-app-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            transform: rotate(180deg);
-        }
+.refresh-app-btn:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    color: white;
+    transform: rotate(180deg) scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+}
