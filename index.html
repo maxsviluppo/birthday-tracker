@@ -27,6 +27,11 @@
     <!-- Auth Container -->
     <div id="authContainer" class="auth-container">
         <div class="auth-card">
+            <!-- Refresh Button for WebApp -->
+            <button id="refreshAppBtn" class="refresh-app-btn" title="Aggiorna App">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+
             <div class="auth-header">
                 <i class="fas fa-birthday-cake"></i>
                 <h1>Birthday Tracker</h1>
@@ -89,6 +94,9 @@
                     <span id="totalCount">0 compleanni</span>
                 </div>
                 <div class="header-actions">
+                    <button id="changePasswordBtn" class="action-header-btn" title="Modifica Password">
+                        <i class="fas fa-key"></i>
+                    </button>
                     <button id="deleteAccountBtn" class="delete-account-btn" title="Elimina Account">
                         <i class="fas fa-user-times"></i>
                     </button>
@@ -158,17 +166,18 @@
 
             <div class="footer-promo">
                 <p class="promo-text">
-                    <i class="fas fa-lightbulb"></i>
-                    Hai bisogno di un'app personalizzata?
+                    <i class="fas fa-star"></i>
+                    Ti piace questa app?
                 </p>
-                <a href="mailto:castromassimo@gmail.com" class="promo-contact" title="Contattami">
-                    <i class="fas fa-envelope"></i>
-                    <span>Contattami</span>
+                <a href="https://wa.me/393339122394?text=Ciao!%20Vorrei%20creare%20un'app%20simile%20a%20Birthday%20Tracker."
+                    target="_blank" class="promo-contact">
+                    <i class="fab fa-whatsapp"></i>
+                    Richiedi la tua App
                 </a>
             </div>
 
             <div class="footer-credits">
-                <p>Made with <i class="fas fa-heart"></i> by DevTools</p>
+                Made with <i class="fas fa-heart"></i> by You
             </div>
         </footer>
     </div>
@@ -177,10 +186,8 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-edit"></i> Modifica Compleanno</h3>
-                <button class="close-btn" id="closeModal">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3><i class="fas fa-edit"></i> Modifica</h3>
+                <button id="closeModal" class="close-btn">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="input-group">
@@ -202,7 +209,52 @@
         </div>
     </div>
 
-    <script src="supabase-config.js"></script>
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Modifica Password</h3>
+                <button id="closeChangePasswordModal" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="oldPassword">Vecchia Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="oldPassword" placeholder="Password attuale">
+                        <button id="toggleOldPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="newChangePassword">Nuova Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="newChangePassword" placeholder="Minimo 6 caratteri">
+                        <button id="toggleNewChangePassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="confirmNewPassword">Conferma Nuova Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmNewPassword" placeholder="Ripeti password">
+                        <button id="toggleConfirmNewPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelChangePassword" class="secondary-btn">Annulla</button>
+                <button id="saveChangePassword" class="primary-btn">
+                    <i class="fas fa-save"></i>
+                    <span>Modifica e Conferma</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 
