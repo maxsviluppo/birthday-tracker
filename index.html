@@ -4,24 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎂 Birthday Tracker - Gestisci i Compleanni</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="description" content="Birthday Tracker - Non dimenticare mai un compleanno!">
+    <title>🎂 Birthday Tracker</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <!-- Animated Background -->
     <div class="background">
-        <div class="confetti"></div>
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
+        <div class="confetti"></div>
     </div>
 
     <!-- Auth Container -->
@@ -230,12 +236,33 @@
                     <label for="newChangePassword">Nuova Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="newChangePassword" placeholder="Minimo 6 caratteri">
+                        <button id="toggleNewChangePassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
                         </button>
                     </div>
                 </div>
+                <div class="input-group">
+                    <label for="confirmNewPassword">Conferma Nuova Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmNewPassword" placeholder="Ripeti password">
+                        <button id="toggleConfirmNewPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="passwordMatchMessage" class="password-match-message"></div>
+                </div>
             </div>
+            <div class="modal-footer">
+                <button id="cancelChangePassword" class="secondary-btn">Annulla</button>
+                <button id="saveChangePassword" class="primary-btn">
+                    <i class="fas fa-save"></i>
+                    <span>Modifica e Conferma</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-            <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
