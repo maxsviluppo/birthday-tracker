@@ -494,7 +494,26 @@ body {
     width: auto;
     margin-top: 0;
     height: 54px;
-    padding: 0 30px;
+    padding: 0 35px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #c471ed 50%, #ff6b9d 100%);
+    background-size: 200% 100%;
+    box-shadow: 0 10px 25px rgba(255, 107, 157, 0.5),
+        0 0 20px rgba(196, 113, 237, 0.3);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.date-button-group .primary-btn:hover {
+    background-position: 100% 0;
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(255, 107, 157, 0.7),
+        0 0 30px rgba(196, 113, 237, 0.5),
+        0 0 50px rgba(255, 107, 157, 0.3);
+}
+
+.date-button-group .primary-btn:active {
+    transform: translateY(-2px) scale(1.02);
 }
 
 /* ===== BIRTHDAYS SECTION ===== */
@@ -581,7 +600,10 @@ body {
 .item-name {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-light);
+    background: linear-gradient(180deg, #ffffff 0%, #808080 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: 0.5px;
     white-space: nowrap;
     overflow: hidden;
