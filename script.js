@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             showAuth();
-            // REFRESH PAGE ON LOGOUT as requested
-            window.location.reload();
+            // Removed auto-reload here to prevent loops/blocking. 
+            // Reload is now handled explicitly in the logout button action.
         } else if (event === 'PASSWORD_RECOVERY') {
             // User clicked the reset link in email
             showUpdatePasswordForm();
@@ -310,7 +310,7 @@ function initializeAppListeners() {
     // Logout
     logoutBtn.addEventListener('click', async () => {
         await supabase.auth.signOut();
-        // Reload handled in onAuthStateChange
+        window.location.reload(); // Explicit reload on user action
     });
 
     // Delete Account
