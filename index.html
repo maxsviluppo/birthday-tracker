@@ -48,6 +48,9 @@
                         </button>
                     </div>
                 </div>
+                <div class="form-footer-links">
+                    <a href="#" id="forgotPasswordLink" class="forgot-link">Password dimenticata?</a>
+                </div>
                 <button id="loginBtn" class="primary-btn">
                     <span>Accedi</span>
                     <i class="fas fa-arrow-right"></i>
@@ -75,6 +78,37 @@
                     <i class="fas fa-user-plus"></i>
                 </button>
                 <p class="auth-switch">Hai già un account? <a href="#" id="showLogin">Accedi</a></p>
+            </div>
+
+            <!-- Password Recovery Form -->
+            <div id="recoveryForm" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <label for="recoveryEmail">Inserisci la tua email</label>
+                    <input type="email" id="recoveryEmail" placeholder="tua@email.com" autocomplete="email">
+                </div>
+                <button id="sendRecoveryBtn" class="primary-btn">
+                    <span>Invia Link di Reset</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <p class="auth-switch"><a href="#" id="backToLoginFromRecovery">Torna al Login</a></p>
+            </div>
+
+            <!-- Update Password Form -->
+            <div id="updatePasswordForm" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <label for="newPassword">Nuova Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="newPassword" placeholder="Minimo 6 caratteri"
+                            autocomplete="new-password">
+                        <button id="toggleNewPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="updatePasswordBtn" class="primary-btn">
+                    <span>Aggiorna Password</span>
+                    <i class="fas fa-save"></i>
+                </button>
             </div>
         </div>
     </div>
