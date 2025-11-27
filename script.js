@@ -20,11 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             showAuth();
-            // Removed auto-reload here to prevent loops/blocking. 
-            // Reload is now handled explicitly in the logout button action.
-        } else if (event === 'PASSWORD_RECOVERY') {
-            // User clicked the reset link in email
-            showUpdatePasswordForm();
+            // Reload is handled explicitly in the logout button action to prevent loops
         }
     });
 
@@ -39,93 +35,17 @@ function initializeAuthListeners() {
     const showSignupLink = document.getElementById('showSignup');
     const showLoginLink = document.getElementById('showLogin');
 
-    // Recovery elements
-    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    const sendRecoveryBtn = document.getElementById('sendRecoveryBtn');
-    const backToLoginFromRecovery = document.getElementById('backToLoginFromRecovery');
-    const updatePasswordBtn = document.getElementById('updatePasswordBtn');
-
     // Switch between login and signup
     showSignupLink.addEventListener('click', (e) => {
         e.preventDefault();
-        hideAllForms();
+        document.getElementById('loginForm').style.display = 'none';
         document.getElementById('signupForm').style.display = 'block';
     });
 
     showLoginLink.addEventListener('click', (e) => {
         e.preventDefault();
-        hideAllForms();
+        document.getElementById('signupForm').style.display = 'none';
         document.getElementById('loginForm').style.display = 'block';
-    });
-
-    // Forgot Password Flow
-    forgotPasswordLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        hideAllForms();
-        document.getElementById('recoveryForm').style.display = 'block';
-    });
-
-    backToLoginFromRecovery.addEventListener('click', (e) => {
-        e.preventDefault();
-        hideAllForms();
-        document.getElementById('loginForm').style.display = 'block';
-    });
-
-    // Send Recovery Email
-    sendRecoveryBtn.addEventListener('click', async () => {
-        const email = document.getElementById('recoveryEmail').value.trim();
-
-        if (!email) {
-            showToast('Inserisci la tua email!', 'error');
-            return;
-        }
-
-        sendRecoveryBtn.disabled = true;
-        sendRecoveryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Invio...';
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.href, // Redirect back to this page
-        });
-
-        if (error) {
-            showToast(error.message, 'error');
-            sendRecoveryBtn.disabled = false;
-            sendRecoveryBtn.innerHTML = '<span>Invia Link di Reset</span><i class="fas fa-paper-plane"></i>';
-        } else {
-            showToast('Link inviato! Controlla la tua email.', 'success');
-            setTimeout(() => {
-                hideAllForms();
-                document.getElementById('loginForm').style.display = 'block';
-                sendRecoveryBtn.disabled = false;
-                sendRecoveryBtn.innerHTML = '<span>Invia Link di Reset</span><i class="fas fa-paper-plane"></i>';
-            }, 3000);
-        }
-    });
-
-    // Update Password (after clicking link in email)
-    updatePasswordBtn.addEventListener('click', async () => {
-        const newPassword = document.getElementById('newPassword').value;
-
-        if (!newPassword || newPassword.length < 6) {
-            showToast('La password deve essere di almeno 6 caratteri!', 'error');
-            return;
-        }
-
-        updatePasswordBtn.disabled = true;
-        updatePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aggiornamento...';
-
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
-
-        if (error) {
-            showToast(error.message, 'error');
-            updatePasswordBtn.disabled = false;
-            updatePasswordBtn.innerHTML = '<span>Aggiorna Password</span><i class="fas fa-save"></i>';
-        } else {
-            showToast('Password aggiornata con successo!', 'success');
-            setTimeout(() => {
-                window.location.reload(); // Reload to clear URL fragments and show app
-            }, 1500);
-        }
     });
 
     // Toggle Password Visibility Helper
@@ -153,7 +73,6 @@ function initializeAuthListeners() {
     // Initialize toggles
     togglePasswordVisibility('loginPassword', 'toggleLoginPassword');
     togglePasswordVisibility('signupPassword', 'toggleSignupPassword');
-    togglePasswordVisibility('newPassword', 'toggleNewPassword');
 
     // Change Password Modal Toggles
     togglePasswordVisibility('oldPassword', 'toggleOldPassword');
@@ -196,7 +115,6 @@ function initializeAuthListeners() {
             loginBtn.innerHTML = '<span>Accedi</span><i class="fas fa-arrow-right"></i>';
         } else {
             showToast('Accesso effettuato!', 'success');
-            // Page reload happens automatically via onAuthStateChange -> showApp or manual reload if preferred
         }
     });
 
@@ -227,26 +145,10 @@ function initializeAuthListeners() {
         } else {
             showToast('Registrazione completata! Accedi ora.', 'success');
             setTimeout(() => {
-                // REFRESH PAGE AFTER SIGNUP as requested
                 window.location.reload();
             }, 1500);
         }
     });
-}
-
-function hideAllForms() {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('signupForm').style.display = 'none';
-    document.getElementById('recoveryForm').style.display = 'none';
-    document.getElementById('updatePasswordForm').style.display = 'none';
-}
-
-function showUpdatePasswordForm() {
-    hideAllForms();
-    document.getElementById('updatePasswordForm').style.display = 'block';
-    // Ensure auth container is visible if we are somehow in app mode
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('appContainer').style.display = 'none';
 }
 
 // ===== MAIN APP =====
@@ -339,7 +241,6 @@ function initializeAppListeners() {
             // Sign out after successful deletion
             await supabase.auth.signOut();
             showToast('✅ Dati eliminati con successo!', 'success');
-            // Reload handled in onAuthStateChange
 
         } catch (error) {
             console.error('Error deleting data:', error);
@@ -477,7 +378,7 @@ function initializeAppListeners() {
                 // 3. Sign out and reload
                 setTimeout(async () => {
                     await supabase.auth.signOut();
-                    // Reload handled by onAuthStateChange
+                    window.location.reload();
                 }, 2000);
             }
         });

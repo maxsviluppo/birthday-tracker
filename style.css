@@ -315,25 +315,6 @@ body {
     transform: translateY(0) scale(0.98);
 }
 
-.form-footer-links {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    margin-top: -10px;
-}
-
-.forgot-link {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.forgot-link:hover {
-    color: #ff6b9d;
-    text-decoration: underline;
-}
-
 .auth-switch {
     text-align: center;
     margin-top: 20px;
