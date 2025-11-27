@@ -492,21 +492,6 @@ body {
 
 .date-button-group .primary-btn {
     width: auto;
-    margin-top: 0;
-    height: 54px;
-    padding: 0 30px;
-}
-
-/* ===== BIRTHDAYS SECTION ===== */
-.birthdays-section {
-    margin-top: 40px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
 }
 
 .section-header h2 {
