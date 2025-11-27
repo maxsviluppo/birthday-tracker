@@ -41,318 +41,169 @@
                 <div class="input-group">
                     <label for="loginPassword">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="loginPassword" placeholder="La tua password" <!DOCTYPE html>
-                        <html lang="it">
+                        <input type="password" id="loginPassword" placeholder="La tua password"
+                            autocomplete="current-password">
+                        <button id="toggleLoginPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="loginBtn" class="primary-btn">
+                    <span>Accedi</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <p class="auth-switch">Non hai un account? <a href="#" id="showSignup">Registrati</a></p>
+            </div>
 
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>🎂 Birthday Tracker - Gestisci i Compleanni</title>
-                            <link rel="stylesheet" href="style.css">
-                            <link rel="preconnect" href="https://fonts.googleapis.com">
-                            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                            <link
-                                href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-                                rel="stylesheet">
-                            <link rel="stylesheet"
-                                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-                                integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-                                crossorigin="anonymous" referrerpolicy="no-referrer" />
-                            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-                        </head>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="tua@email.com" autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="signupPassword" placeholder="Minimo 6 caratteri"
+                            autocomplete="new-password">
+                        <button id="toggleSignupPassword" class="icon-btn" type="button" tabindex="-1">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="signupBtn" class="primary-btn">
+                    <span>Registrati</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <p class="auth-switch">Hai già un account? <a href="#" id="showLogin">Accedi</a></p>
+            </div>
+        </div>
+    </div>
 
-                        <body>
-                            <!-- Animated Background -->
-                            <div class="background">
-                                <div class="confetti"></div>
-                                <div class="blob blob-1"></div>
-                                <div class="blob blob-2"></div>
-                                <div class="blob blob-3"></div>
-                            </div>
+    <!-- Main App Container -->
+    <div id="appContainer" class="container" style="display: none;">
+        <header class="app-header">
+            <div class="header-content">
+                <i class="fas fa-birthday-cake header-icon"></i>
+                <h1>Birthday Tracker</h1>
+                <div class="stats">
+                    <span id="totalCount">0 compleanni</span>
+                </div>
+                <div class="header-actions">
+                    <button id="deleteAccountBtn" class="delete-account-btn" title="Elimina Account">
+                        <i class="fas fa-user-times"></i>
+                    </button>
+                    <button id="logoutBtn" class="logout-btn" title="Esci">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
 
-                            <!-- Auth Container -->
-                            <div id="authContainer" class="auth-container">
-                                <div class="auth-card">
-                                    <div class="auth-header">
-                                        <i class="fas fa-birthday-cake"></i>
-                                        <h1>Birthday Tracker</h1>
-                                        <p>Non dimenticare mai un compleanno!</p>
-                                    </div>
+        <!-- Add Birthday Form -->
+        <div class="add-section">
+            <h2 class="gradient-title">Eventi</h2>
 
-                                    <div id="loginForm" class="auth-form">
-                                        <div class="input-group">
-                                            <label for="loginEmail">Email</label>
-                                            <input type="email" id="loginEmail" placeholder="tua@email.com"
-                                                autocomplete="email">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="loginPassword">Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="loginPassword" placeholder="La tua password"
-                                                    autocomplete="current-password">
-                                                <button id="toggleLoginPassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="form-footer-links">
-                                            <a href="#" id="forgotPasswordLink" class="forgot-link">Password
-                                                dimenticata?</a>
-                                        </div>
-                                        <button id="loginBtn" class="primary-btn">
-                                            <span>Accedi</span>
-                                            <i class="fas fa-arrow-right"></i>
-                                        </button>
-                                        <p class="auth-switch">Non hai un account? <a href="#"
-                                                id="showSignup">Registrati</a></p>
-                                    </div>
+            <!-- Nome Persona -->
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="personName">Nome Persona</label>
+                    <input type="text" id="personName" placeholder="es. Mario Rossi">
+                </div>
+            </div>
 
-                                    <div id="signupForm" class="auth-form" style="display: none;">
-                                        <div class="input-group">
-                                            <label for="signupEmail">Email</label>
-                                            <input type="email" id="signupEmail" placeholder="tua@email.com"
-                                                autocomplete="email">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="signupPassword">Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="signupPassword"
-                                                    placeholder="Minimo 6 caratteri" autocomplete="new-password">
-                                                <button id="toggleSignupPassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button id="signupBtn" class="primary-btn">
-                                            <span>Registrati</span>
-                                            <i class="fas fa-user-plus"></i>
-                                        </button>
-                                        <p class="auth-switch">Hai già un account? <a href="#" id="showLogin">Accedi</a>
-                                        </p>
-                                    </div>
+            <!-- Data + Pulsante -->
+            <div class="date-button-group">
+                <div class="input-group">
+                    <label for="birthDate">Data di Nascita</label>
+                    <div class="date-input-wrapper">
+                        <input type="date" id="birthDate">
+                        <button type="button" class="calendar-icon-btn" id="calendarBtn">
+                            <i class="fas fa-calendar-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="addBtn" class="primary-btn">
+                    <i class="fas fa-gift"></i>
+                    <span>Aggiungi Compleanno</span>
+                </button>
+            </div>
+        </div>
 
-                                    <!-- Password Recovery Form -->
-                                    <div id="recoveryForm" class="auth-form" style="display: none;">
-                                        <div class="input-group">
-                                            <label for="recoveryEmail">Inserisci la tua email</label>
-                                            <input type="email" id="recoveryEmail" placeholder="tua@email.com"
-                                                autocomplete="email">
-                                        </div>
-                                        <button id="sendRecoveryBtn" class="primary-btn">
-                                            <span>Invia Link di Reset</span>
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                        <p class="auth-switch"><a href="#" id="backToLoginFromRecovery">Torna al
-                                                Login</a></p>
-                                    </div>
+        <!-- Birthdays List -->
+        <div class="birthdays-section">
+            <!-- Separator -->
+            <div class="section-separator">
+                <span class="separator-line"></span>
+            </div>
 
-                                    <!-- Update Password Form -->
-                                    <div id="updatePasswordForm" class="auth-form" style="display: none;">
-                                        <div class="input-group">
-                                            <label for="newPassword">Nuova Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="newPassword" placeholder="Minimo 6 caratteri"
-                                                    autocomplete="new-password">
-                                                <button id="toggleNewPassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button id="updatePasswordBtn" class="primary-btn">
-                                            <span>Aggiorna Password</span>
-                                            <i class="fas fa-save"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+            <div id="birthdaysList" class="birthdays-grid">
+                <!-- Birthday cards will be injected here -->
+            </div>
 
-                            <!-- Main App Container -->
-                            <div id="appContainer" class="container" style="display: none;">
-                                <header class="app-header">
-                                    <div class="header-content">
-                                        <i class="fas fa-birthday-cake header-icon"></i>
-                                        <h1>Birthday Tracker</h1>
-                                        <div class="stats">
-                                            <span id="totalCount">0 compleanni</span>
-                                        </div>
-                                        <div class="header-actions">
-                                            <button id="changePasswordBtn" class="action-header-btn"
-                                                title="Modifica Password">
-                                                <i class="fas fa-key"></i>
-                                            </button>
-                                            <button id="deleteAccountBtn" class="delete-account-btn"
-                                                title="Elimina Account">
-                                                <i class="fas fa-user-times"></i>
-                                            </button>
-                                            <button id="logoutBtn" class="logout-btn" title="Esci">
-                                                <i class="fas fa-sign-out-alt"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </header>
+            <!-- Delete All Button -->
+            <div class="delete-all-container">
+                <button id="deleteAllBtn" class="delete-all-btn">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Cancella tutti i compleanni</span>
+                </button>
+            </div>
+        </div>
 
-                                <!-- Add Birthday Form -->
-                                <div class="add-section">
-                                    <h2 class="gradient-title">Eventi</h2>
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-user">
+                <i class="fas fa-user-circle"></i>
+                <span id="footerEmail" class="footer-email"></span>
+            </div>
 
-                                    <!-- Nome Persona -->
-                                    <div class="form-grid">
-                                        <div class="input-group">
-                                            <label for="personName">Nome Persona</label>
-                                            <input type="text" id="personName" placeholder="es. Mario Rossi">
-                                        </div>
-                                    </div>
+            <div class="footer-promo">
+                <p class="promo-text">
+                    <i class="fas fa-lightbulb"></i>
+                    Hai bisogno di un'app personalizzata?
+                </p>
+                <a href="mailto:castromassimo@gmail.com" class="promo-contact" title="Contattami">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contattami</span>
+                </a>
+            </div>
 
-                                    <!-- Data + Pulsante -->
-                                    <div class="date-button-group">
-                                        <div class="input-group">
-                                            <label for="birthDate">Data di Nascita</label>
-                                            <div class="date-input-wrapper">
-                                                <input type="date" id="birthDate">
-                                                <button type="button" class="calendar-icon-btn" id="calendarBtn">
-                                                    <i class="fas fa-calendar-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <button id="addBtn" class="primary-btn">
-                                            <i class="fas fa-gift"></i>
-                                            <span>Aggiungi Compleanno</span>
-                                        </button>
-                                    </div>
-                                </div>
+            <div class="footer-credits">
+                <p>Made with <i class="fas fa-heart"></i> by DevTools</p>
+            </div>
+        </footer>
+    </div>
 
-                                <!-- Birthdays List -->
-                                <div class="birthdays-section">
-                                    <!-- Separator -->
-                                    <div class="section-separator">
-                                        <span class="separator-line"></span>
-                                    </div>
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Modifica Compleanno</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="editPersonName">Nome Persona</label>
+                    <input type="text" id="editPersonName">
+                </div>
+                <div class="input-group">
+                    <label for="editBirthDate">Data di Nascita</label>
+                    <input type="date" id="editBirthDate">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEdit" class="secondary-btn">Annulla</button>
+                <button id="saveEdit" class="primary-btn">
+                    <i class="fas fa-save"></i>
+                    <span>Salva Modifiche</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-                                    <div id="birthdaysList" class="birthdays-grid">
-                                        <!-- Birthday cards will be injected here -->
-                                    </div>
+    <script src="supabase-config.js"></script>
+    <script src="script.js"></script>
+</body>
 
-                                    <!-- Delete All Button -->
-                                    <div class="delete-all-container">
-                                        <button id="deleteAllBtn" class="delete-all-btn">
-                                            <i class="fas fa-trash-alt"></i>
-                                            <span>Cancella tutti i compleanni</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Footer -->
-                                <footer class="app-footer">
-                                    <div class="footer-user">
-                                        <i class="fas fa-user-circle"></i>
-                                        <span id="footerEmail" class="footer-email"></span>
-                                    </div>
-
-                                    <div class="footer-promo">
-                                        <p class="promo-text">
-                                            <i class="fas fa-lightbulb"></i>
-                                            Hai bisogno di un'app personalizzata?
-                                        </p>
-                                        <a href="mailto:castromassimo@gmail.com" class="promo-contact"
-                                            title="Contattami">
-                                            <i class="fas fa-envelope"></i>
-                                            <span>Contattami</span>
-                                        </a>
-                                    </div>
-
-                                    <div class="footer-credits">
-                                        <p>Made with <i class="fas fa-heart"></i> by DevTools</p>
-                                    </div>
-                                </footer>
-                            </div>
-
-                            <!-- Edit Modal -->
-                            <div id="editModal" class="modal">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3><i class="fas fa-edit"></i> Modifica Compleanno</h3>
-                                        <button class="close-btn" id="closeModal">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <label for="editPersonName">Nome Persona</label>
-                                            <input type="text" id="editPersonName">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="editBirthDate">Data di Nascita</label>
-                                            <input type="date" id="editBirthDate">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="cancelEdit" class="secondary-btn">Annulla</button>
-                                        <button id="saveEdit" class="primary-btn">
-                                            <i class="fas fa-save"></i>
-                                            <span>Salva Modifiche</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Change Password Modal -->
-                            <div id="changePasswordModal" class="modal">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h3><i class="fas fa-key"></i> Modifica Password</h3>
-                                        <button class="close-btn" id="closeChangePasswordModal">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <label for="oldPassword">Vecchia Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="oldPassword" placeholder="Password attuale">
-                                                <button id="toggleOldPassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="newChangePassword">Nuova Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="newChangePassword"
-                                                    placeholder="Minimo 6 caratteri">
-                                                <button id="toggleNewChangePassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="confirmNewPassword">Conferma Password</label>
-                                            <div class="password-wrapper">
-                                                <input type="password" id="confirmNewPassword"
-                                                    placeholder="Ripeti password">
-                                                <button id="toggleConfirmNewPassword" class="icon-btn" type="button"
-                                                    tabindex="-1">
-                                                    <i class="far fa-eye"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="cancelChangePassword" class="secondary-btn">Annulla</button>
-                                        <button id="saveChangePassword" class="primary-btn">
-                                            <i class="fas fa-save"></i>
-                                            <span>Modifica e Conferma</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <script src="supabase-config.js"></script>
-                            <script src="script.js"></script>
-                        </body>
-
-                        </html>
+</html>

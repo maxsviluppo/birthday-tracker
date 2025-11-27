@@ -395,30 +395,6 @@ body {
     gap: 10px;
 }
 
-.action-header-btn {
-    padding: 12px;
-    background: rgba(255, 215, 0, 0.1);
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
-    color: #ffd700;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    font-size: 1.1rem;
-    width: 44px;
-    height: 44px;
-}
-
-.action-header-btn:hover {
-    background: rgba(255, 215, 0, 0.2);
-    border-color: #ffd700;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-}
-
 .delete-account-btn {
     padding: 12px;
     background: rgba(168, 85, 247, 0.1);
@@ -1192,89 +1168,5 @@ body {
 
     .gift-input-group.budget {
         max-width: none;
-    }
-}
-
-/* ===== MOBILE OPTIMIZATIONS ===== */
-@media (max-width: 480px) {
-
-    /* Auth Card adjustments */
-    .auth-card {
-        padding: 30px 20px;
-        margin: 10px;
-        width: 100%;
-    }
-
-    .auth-header h1 {
-        font-size: 2rem;
-    }
-
-    .auth-header i {
-        font-size: 50px;
-    }
-
-    /* Header Actions adjustments */
-    .header-content {
-        padding: 20px;
-        padding-top: 70px;
-        /* Space for absolute positioned buttons */
-    }
-
-    .header-actions {
-        position: absolute;
-        /* Force absolute on mobile too for this design */
-        top: 15px;
-        right: 15px;
-        margin-top: 0;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    .action-header-btn,
-    .delete-account-btn,
-    .logout-btn {
-        width: 38px;
-        height: 38px;
-        padding: 8px;
-        font-size: 1rem;
-    }
-
-    /* Form adjustments */
-    .date-button-group {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .date-button-group .input-group {
-        width: 100%;
-    }
-
-    .date-button-group .primary-btn {
-        width: 100%;
-        height: 50px;
-    }
-
-    /* Modal adjustments */
-    .modal-content {
-        width: 95%;
-        margin: 10px;
-    }
-
-    .modal-header {
-        padding: 15px 20px;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-
-    .modal-footer {
-        padding: 15px 20px;
-        flex-direction: column-reverse;
-        /* Stack buttons on mobile */
-    }
-
-    .modal-footer button {
-        width: 100%;
     }
 }
